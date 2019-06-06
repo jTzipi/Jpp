@@ -160,7 +160,7 @@ public class Tile extends StackPane implements ITile {
         NumberBinding layoutYBd = tw.multiply( getY() ).add( gnorth );
 
         layoutXProperty().bind( layoutXBd );
-
+        layoutYProperty().bind( layoutYBd );
     }
 
     private void create() {
