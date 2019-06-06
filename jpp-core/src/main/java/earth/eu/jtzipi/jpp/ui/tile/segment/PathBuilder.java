@@ -18,6 +18,7 @@
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
 import earth.eu.jtzipi.jpp.IBuilder;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -46,6 +47,8 @@ public class PathBuilder implements IBuilder<Path> {
     public static PathBuilder create() {
         return new PathBuilder();
     }
+
+
 
     public PathBuilder lx( final double x ) {
         this.path.getElements().add( new LineTo( x, lastY ) );

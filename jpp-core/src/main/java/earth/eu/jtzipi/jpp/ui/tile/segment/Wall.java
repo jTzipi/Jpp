@@ -67,12 +67,20 @@ public class Wall  {
     private WallSegments ws;
 
     private Color color = Color.grayRgb( 47 );
-    private ObjectProperty<Color> fxColorProp;
+    private ObjectProperty<Color> fxColorProp = new SimpleObjectProperty<>(this, "FX_WALL_COLOR_PROP", color ); // ;
 
 
     Wall( WallSegments wall ) {
 
     this.ws = wall;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static Wall empty() {
+        return new Wall( WallSegments.NONE );
     }
 
     /**
@@ -92,6 +100,11 @@ public class Wall  {
         return new Wall( WallSegments.DOOR_BREAKABLE );
     }
 
+
+    /**
+     *
+     * @return
+     */
     public static Wall gate() {
         return new Wall( WallSegments.GATE );
     }
@@ -100,9 +113,7 @@ public class Wall  {
      * @return wall color property
      */
     public final ObjectProperty<Color> getColorPropFX() {
-        if( null == fxColorProp ) {
-            this.fxColorProp = new SimpleObjectProperty<>(this, "FX_WALL_COLOR_PROP", color );
-        }
+
         return fxColorProp;
     }
 
@@ -116,8 +127,8 @@ public class Wall  {
         Objects.requireNonNull(p2D);
 
         Path path = ws.createPath();
-
-        path.setFill( color );
+        // System.out.println( fxColorProp.getValue() + "" );
+        path.setStroke( fxColorProp.getValue() ); // System.out.println( fxColorProp.getValue() + "" );
 
         // nothing  when none
         if( WallSegments.NONE == ws ) {
@@ -157,6 +168,7 @@ public class Wall  {
 
         return path;
     }
+
     /**
      * Return a breakable door wall.
      * WallSegments are all kind of walls to draw.
@@ -271,7 +283,11 @@ public class Wall  {
         ARC_E( 7L, false ){
             @Override
             public Path createPath() {
-                return null;
+
+
+                double gysi = TileProperties.getLength();
+                double near = TileProperties.SEGMENT_LEN.doubleValue();
+                return PathBuilder.create().strokeWidth( TileProperties.SEGMENT_WIDTH.doubleValue() ).mx( gysi - near ).lx( gysi ).build();
             }
         },
         /**
