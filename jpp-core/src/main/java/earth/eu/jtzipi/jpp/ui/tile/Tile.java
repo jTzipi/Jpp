@@ -188,8 +188,8 @@ public class Tile extends StackPane implements ITile {
         baseP.setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
 
 
-        System.out.println( "Width :" + getWidth() );
-        System.out.println( "Height :" + getHeight() );
+        System.out.println( "Width :" + baseP.getWidth() );
+        System.out.println( "Height :" + baseP.getHeight() );
         System.out.println( "PH :" + getPrefHeight() );
         System.out.println( "PW :" + getPrefWidth() );
 
@@ -228,7 +228,7 @@ public class Tile extends StackPane implements ITile {
 
         tt.setFont( Font.font( 27D ) );
         tt.setText( getX() + " " + getY() );
-        tt.layoutXProperty().bind( layoutXProperty().add( 10D ) );
+        tt.layoutXProperty().bind( prefWidthProperty().multiply( 0.1D ) );
         tt.layoutYProperty().bind( prefHeightProperty().subtract( 10D ) );
         segL.add( tt );
 

@@ -1,16 +1,15 @@
 package earth.eu.jtzipi.jpp.ui.tile.skin;
 
+import earth.eu.jtzipi.jpp.ui.map.MapEdge;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.util.FXUtils;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.SkinBase;
 
 /**
  *
  * @author jTzipi
  */
-public abstract class AbstractTileSkin  {
+public abstract class AbstractWallEdgeSkin extends SkinBase<MapEdge> {
 
     // Width
     static double W_MIN = 16;
@@ -32,8 +31,8 @@ public abstract class AbstractTileSkin  {
      *
      * @param control
      */
-    protected AbstractTileSkin( final Tile control ) {
-
+    protected AbstractWallEdgeSkin( final MapEdge control ) {
+        super(control);
     }
 
     /**

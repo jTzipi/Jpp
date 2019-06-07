@@ -17,7 +17,11 @@
 package earth.eu.jtzipi.jpp.ui.tile.skin;
 
 
-import earth.eu.jtzipi.jpp.ui.tile.Tile;
+import earth.eu.jtzipi.jpp.ui.map.MapEdge;
+import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -29,7 +33,7 @@ import java.util.Objects;
 /**
  * Default skin for a tile.
  */
-public class DefaultTileSkin extends AbstractTileSkin {
+public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
 
 
     /** Graphics Context. */
@@ -38,20 +42,24 @@ public class DefaultTileSkin extends AbstractTileSkin {
     Canvas canvas;
 
 
+    private DoubleProperty fxWidthProp = new SimpleDoubleProperty(this, "", TileProperties.getLength() );
+
+    private NumberBinding edgeLenBind;
+
     /**
      *
-     * @param tile
+     * @param mapEdge
      */
-    DefaultTileSkin( final Tile tile ) {
-        super(tile);
+    DefaultWallEdgeSkin( final MapEdge mapEdge ) {
+        super( mapEdge );
 
     }
 
 
 
-    public static DefaultTileSkin of( final Tile tile ) {
-        Objects.requireNonNull( tile );
-        DefaultTileSkin dts = new DefaultTileSkin( tile );
+    public static DefaultWallEdgeSkin of( final MapEdge mapEdge ) {
+        Objects.requireNonNull( mapEdge );
+        DefaultWallEdgeSkin dts = new DefaultWallEdgeSkin( mapEdge );
         dts.init();
         dts.drawTile();
         return dts;
@@ -59,7 +67,18 @@ public class DefaultTileSkin extends AbstractTileSkin {
 
     @Override
     protected void init() {
-ensureWidthAndHeight();
+        MapEdge mapEdge = getSkinnable();
+        DoubleProperty tileWProp = TileProperties.widthPropertyFX();
+
+
+        switch ( mapEdge.getPosition() ) {
+            case E:
+            case W: edgeLenBind = TileProperties.FX_GAP_WEST_PROP.add( mapEdge.getTilesPerEdge() * TileProperties.getLength() );
+        }
+
+        canvas = new Canvas(getWidth(), getHeight());
+        gc = canvas.getGraphicsContext2D();
+
     }
 
     @Override
@@ -78,8 +97,7 @@ ensureWidthAndHeight();
         Pane pane = new Pane(  );
        // Tile t = getSkinnable();
 
-        canvas = new Canvas(getWidth(), getHeight());
-        gc = canvas.getGraphicsContext2D();
+
 
         gc.setFill( Color.FORESTGREEN );
         // set background

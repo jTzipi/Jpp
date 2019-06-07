@@ -22,6 +22,7 @@ import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import earth.eu.jtzipi.jpp.ui.tile.Tiles;
 import javafx.scene.Parent;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 
@@ -35,7 +36,7 @@ public final class MainPane extends Parent {
 
     private static final MainPane SINGLETON = new MainPane();
 
-    private Slider tileLenSl;
+    private Spinner<Double> tileLenSpin;
 
     private BorderPane mainPane;
     /**
@@ -57,13 +58,13 @@ public final class MainPane extends Parent {
 
         mainPane = new BorderPane();
 
-        tileLenSl = new Slider( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
-        //tileLenSl.setBlockIncrement( 5D );
+        tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
+
         //tileLenSl.setMajorTickUnit( 10D );
 
-        TileProperties.widthPropertyFX().bind( tileLenSl.valueProperty() );
+        TileProperties.widthPropertyFX().bind( tileLenSpin.valueProperty() );
 
-        ToolBar toolBar = new ToolBar( tileLenSl );
+        ToolBar toolBar = new ToolBar( tileLenSpin );
 
         // TileProperties.setLength( 70D );
 

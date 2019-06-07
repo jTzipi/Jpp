@@ -63,9 +63,7 @@ public final class TileProperties {
 
     }
 
-    public static void setLength( final double length )  {
-        fxWidthProp.setValue( length );
-    }
+
 
     public static double getLength() {
         return fxWidthProp.getValue();

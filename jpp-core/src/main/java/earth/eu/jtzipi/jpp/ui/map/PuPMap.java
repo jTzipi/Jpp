@@ -15,11 +15,12 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.tile;
+package earth.eu.jtzipi.jpp.ui.map;
+
+import earth.eu.jtzipi.jpp.ui.tile.ITile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Pan and Paper map.
