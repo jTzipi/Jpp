@@ -40,7 +40,7 @@ public interface ITile {
 
     /**
      * X Coordinate of this tile.
-     * @return x coordinate
+     * @return lx coordinate
      */
     int getX();
 

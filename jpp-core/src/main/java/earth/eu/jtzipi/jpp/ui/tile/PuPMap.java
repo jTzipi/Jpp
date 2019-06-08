@@ -56,7 +56,7 @@ public class PuPMap {
 
     public void addTile( int x, int y, ITile tile ) {
         if( 0 > x || 0 > y || x >= dimX || y >= dimY ) {
-            throw new IllegalArgumentException("x/y must >= 0 and < dimX/dimY! Your x/y = ");
+            throw new IllegalArgumentException("lx/ly must >= 0 and < dimX/dimY! Your lx/ly = ");
         }
 
         // lazy create new ArrayList

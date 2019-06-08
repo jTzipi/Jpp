@@ -47,23 +47,43 @@ public class PathBuilder implements IBuilder<Path> {
         return new PathBuilder();
     }
 
-    public PathBuilder x( final double x ) {
+    public PathBuilder lx( final double x ) {
         this.path.getElements().add( new LineTo( x, lastY ) );
         this.lastX = x;
         return this;
     }
 
-    public PathBuilder y( final double y ) {
+    public PathBuilder ly( final double y ) {
         this.path.getElements().add( new LineTo( lastX,y ) );
         this.lastY = y;
         return this;
     }
-    public PathBuilder xy( final double x, final double y ) {
+    public PathBuilder lxy( final double x, final double y ) {
         this.path.getElements().add( new LineTo( x, y ) );
         this.lastX = x;
         this.lastY = y;
         return this;
     }
+
+    public PathBuilder mx( final double x ) {
+        this.path.getElements().add( new MoveTo( x, lastY ) );
+        this.lastX = x;
+        return this;
+    }
+
+    public PathBuilder my( final double y ) {
+        this.path.getElements().add( new MoveTo( lastX,y ) );
+        this.lastY = y;
+        return this;
+    }
+
+    public PathBuilder mxy( final double x, final double y ) {
+        this.path.getElements().add( new LineTo( x, y ) );
+        this.lastX = x;
+        this.lastY = y;
+        return this;
+    }
+
 
 
     @Override

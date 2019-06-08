@@ -16,18 +16,22 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
-import earth.eu.jtzipi.jpp.IBuilder;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
 
 import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
 
@@ -36,7 +40,7 @@ import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
  *
  * @author jTzipi
  */
-public class Tile extends Region implements ITile {
+public class Tile extends StackPane implements ITile {
 
 
 
@@ -51,23 +55,40 @@ public class Tile extends Region implements ITile {
     } */
 
 
-
     int x;
     int y;
     int level;
-    /** Segments .*/
+    /**
+     * Segments .
+     */
+    /** East Wall.*/
     Wall eW;
     Wall wW;
     Wall sW;
     Wall nW;
 
 
+    Pane baseP;
+    Pane aviP;
 
-    /** Neighbour tiles. */
+
+    /**
+     * Neighbour tiles.
+     */
     EnumMap<Position2D, ITile> neighbourM = new EnumMap<>( Position2D.class );
 
 
-
+    /**
+     * Tile complete constructor.
+     *
+     * @param eastWall  wall east
+     * @param northWall wall north
+     * @param westWall  wall west
+     * @param southWall wall south
+     * @param x         coordinate lx
+     * @param y         coordinate ly
+     * @param level     level
+     */
     Tile( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
         this.x = x;
         this.y = y;
@@ -76,7 +97,9 @@ public class Tile extends Region implements ITile {
         this.sW = southWall;
         this.nW = northWall;
         this.wW = westWall;
+
         init();
+        create();
         draw();
     }
 
@@ -84,68 +107,103 @@ public class Tile extends Region implements ITile {
     Tile( int x, int y, int level ) {
         this.x = x;
         this.y = y;
-    this.level = level;
+        this.level = level;
     }
 
-    Tile( Builder builder ) {
-        this( builder.x,
-                builder.y, builder.level
-                );
-    }
 
     Tile() {
-        TileProperties.widthPropertyFX().addListener( ( obs, oldW, newW )  -> {
 
-        } );
         // createTile();
         draw();
     }
 
     public static Tile of( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
-        return new Tile( eastWall, northWall, westWall, southWall, x, y, level);
+        return new Tile( eastWall, northWall, westWall, southWall, x, y, level );
     }
 
-    public static Tile of( final int x, final int y){
-        if( 0 > x || 0 > y ) {
+    public static Tile of( final int x, final int y ) {
+        if ( 0 > x || 0 > y ) {
 
 
         }
 
 
-
-        return new Tile(x, y, LEVEL_DEFAULT);
+        return new Tile( x, y, LEVEL_DEFAULT );
     }
 
     public static Tile solid( int x, int y ) {
 
-        Wall we = Wall.solid(  );
-
+        Wall we =  Wall.solid();
 
 
         return new Tile( we, we, we, we, x, y, 0 );
     }
 
-private void init() {
-    final DoubleProperty tw = TileProperties.widthPropertyFX();
-        this.prefWidthProperty().bind( tw );
-        this.prefHeightProperty().bind( tw );
+    private void init() {
+        final DoubleProperty tw = TileProperties.widthPropertyFX();
+
+        prefWidthProperty().bind( tw );
+        prefHeightProperty().bind( tw );
+
         setWidth( getPrefWidth() );
-        setHeight( 21 );
-}
+        setHeight( getPrefHeight() );
 
-    void draw() {
+        tw.addListener( ( obs, oldW, newW ) -> {
 
-        getChildren().setAll( createTile() );
-        setBackground( new Background( new BackgroundFill( Color.TEAL, null, null  ) )  );
-
-
-        System.out.println("Width :" + getWidth() );
-        System.out.println("Height :" + getHeight() );
-        System.out.println("PH :" + getPrefHeight() );
-        System.out.println("PW :" + getPrefWidth() );
+            if ( oldW != newW ) {
+                draw();
+            }
+        } );
     }
 
-    private Collection<? extends Path> createTile() {
+    private void create() {
+
+
+        baseP = new Pane();
+        //baseP.prefWidthProperty().bind( widthProperty() );
+
+        aviP = new Pane();
+        //aviP.prefWidthProperty().bind( widthProperty() );
+
+
+        createAviPane();
+
+        setOnMouseExited( me -> aviP.setVisible( false ) );
+        setOnMouseEntered( me -> aviP.setVisible( true ) );
+        getChildren().addAll( baseP, aviP );
+
+    }
+
+    private void draw() {
+
+        baseP.getChildren().setAll( createTile() );
+
+
+        baseP.setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
+
+
+        System.out.println( "Width :" + getWidth() );
+        System.out.println( "Height :" + getHeight() );
+        System.out.println( "PH :" + getPrefHeight() );
+        System.out.println( "PW :" + getPrefWidth() );
+    }
+
+    private void createAviPane() {
+
+        Wall w = Wall.gate();
+        w.getColorPropFX().setValue( Color.RED );
+
+        Shape we = w.toPath( E );
+        Shape ww = w.toPath( W );
+        Shape ws = w.toPath( S );
+        Shape wno = w.toPath( N );
+
+        aviP.getChildren().setAll( we, ww, ws, wno );
+        aviP.setVisible( false );
+
+    }
+
+    private Collection<? extends Shape> createTile() {
 
 
         //double w = TileProperties.getLength();
@@ -154,14 +212,23 @@ private void init() {
 
         //Line wall = new Line( 0D, 0D, 0, h );
         //wall.setStrokeWidth( 5D );
-       List<Path> segL = new ArrayList<>();
+        List<Shape> segL = new ArrayList<>();
 
-       segL.add( eW.toPath( E ) );
-       segL.add( sW.toPath( S ) );
-       segL.add( nW.toPath( N ) );
-       segL.add( wW.toPath( W ) );
+        segL.add( eW.toPath( E ) );
+        segL.add( sW.toPath( S ) );
+        segL.add( nW.toPath( N ) );
+        segL.add( wW.toPath( W ) );
 
-       return segL;
+        Text tt = new Text();
+
+
+        tt.setFont( Font.font( 27D ) );
+        tt.setText( getX() + " " + getY() );
+        tt.layoutXProperty().bind( baseP.layoutXProperty().add( 10D ) );
+        tt.layoutYProperty().bind( prefHeightProperty().subtract( 10D ) );
+        segL.add( tt );
+
+        return segL;
     }
 
     @Override
@@ -200,35 +267,32 @@ private void init() {
     }
 
 
-
-    public static final class Builder implements IBuilder<Tile> {
-
-        // mandatory
-        private final int x;
-        private final int y;
-        // optional
-
-        private int level;
-
-
-        Builder( final int x, final int y ) {
-            this.x = x;
-            this.y = y;
-        }
-
-
-
-        @Override
-        public Tile build() {
-        return new Tile( this );
-        }
-    }
+//    public static final class Builder implements IBuilder<Tile> {
+//
+//        // mandatory
+//        private final int lx;
+//        private final int ly;
+//        // optional
+//
+//        private int level;
+//
+//
+//        Builder( final int lx, final int ly ) {
+//            this.lx = lx;
+//            this.ly = ly;
+//        }
+//
+//
+//        @Override
+//        public Tile build() {
+//            return new Tile( this );
+//        }
+//    }
 
 
-   // public Map<Dir2D, WallSegments> getWallMap() {
-   //     return wallM;
-   // }
-
+    // public Map<Dir2D, WallSegments> getWallMap() {
+    //     return wallM;
+    // }
 
 
     public static class Floor {

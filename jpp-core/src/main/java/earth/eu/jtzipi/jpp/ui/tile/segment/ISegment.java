@@ -18,7 +18,8 @@
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
 
-import javafx.scene.shape.Path;
+
+import javafx.scene.shape.Shape;
 
 /**
  * A Segment is a part of a tile which is drawn.
@@ -31,7 +32,7 @@ import javafx.scene.shape.Path;
  *         <li>stairs</li>
  *         <li>knobs</li>
  *     </ul>
- *     Segment are draw as {@linkplain Path}'s.
+ *     Segment are draw as {@linkplain Shape}'s.
  * </p>
  */
 public interface ISegment {
@@ -50,7 +51,7 @@ public interface ISegment {
      * param width width of tile
      * @return path of segment
      */
-    Path createPath(  );
+    Shape createPath(  );
 
     /**
      * Id of segment.

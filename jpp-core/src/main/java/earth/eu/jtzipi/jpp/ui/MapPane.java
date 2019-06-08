@@ -94,14 +94,16 @@ public class MapPane extends BorderPane {
         // test
         // IntStream.range(0, 100).mapToObj(  )
 
+        // double ws = Math.round( TileProperties.SEGMENT_WIDTH.doubleValue());
+
         for( int i = 0; i < row; i++ ) {
 
             for( int j = 0; j < column; j++ ) {
 
                 Tile tile = Tile.solid( i, j );
 
-                tile.setTranslateX( fxLeftGapBinding.doubleValue() + ( i * tw.getValue() ) );
-                tile.setTranslateY( fxTopGapBinding.doubleValue() + ( j * tw.getValue()) );
+                tile.setLayoutX( fxLeftGapBinding.doubleValue() + ( i * tw.getValue() )  );
+                tile.setLayoutY( fxTopGapBinding.doubleValue() + ( j * tw.getValue())  );
 
                 getChildren().add(tile);
             }
