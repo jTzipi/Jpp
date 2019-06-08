@@ -17,18 +17,15 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
-import earth.eu.jtzipi.jpp.ui.tile.ITile;
+
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.*;
-import org.controlsfx.control.GridView;
 
-import java.util.stream.IntStream;
+
+
 
 /**
  * Pane for displaying a single map.
@@ -41,8 +38,7 @@ public class MapPane extends BorderPane {
     int column;
     Pane tileP;
 
-    int gapVert;
-    int gapHori;
+
 
 
     DoubleBinding fxTopGapBinding;
@@ -87,14 +83,14 @@ public class MapPane extends BorderPane {
 
     }
 
+
+
     private void createMapPane() {
         // new tile pane
         tileP = new TilePane();
-        final DoubleProperty tw = TileProperties.widthPropertyFX();
+
         // test
         // IntStream.range(0, 100).mapToObj(  )
-
-        // double ws = Math.round( TileProperties.SEGMENT_WIDTH.doubleValue());
 
         for( int i = 0; i < row; i++ ) {
 
@@ -102,8 +98,7 @@ public class MapPane extends BorderPane {
 
                 Tile tile = Tile.solid( i, j );
 
-                tile.setLayoutX( fxLeftGapBinding.doubleValue() + ( i * tw.getValue() )  );
-                tile.setLayoutY( fxTopGapBinding.doubleValue() + ( j * tw.getValue())  );
+
 
                 getChildren().add(tile);
             }

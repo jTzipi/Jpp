@@ -22,7 +22,9 @@ import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import earth.eu.jtzipi.jpp.ui.tile.Tiles;
 import javafx.scene.Parent;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
 
 import java.util.Map;
 
@@ -34,8 +36,9 @@ public final class MainPane extends Parent {
 
     private static final MainPane SINGLETON = new MainPane();
 
-    private Slider tileLenSl;
+    private Spinner<Double> tileLenSpin;
 
+    private BorderPane mainPane;
     /**
      * MainPane.
      */
@@ -53,14 +56,17 @@ public final class MainPane extends Parent {
 
     private void createMainPane() {
 
+        mainPane = new BorderPane();
 
-        tileLenSl = new Slider( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, 24D );
-        tileLenSl.setBlockIncrement( 5D );
-        tileLenSl.setMajorTickUnit( 10D );
+        tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
 
-        ToolBar toolBar = new ToolBar( tileLenSl );
+        //tileLenSl.setMajorTickUnit( 10D );
 
-        TileProperties.setLength( 70D );
+        TileProperties.widthPropertyFX().bind( tileLenSpin.valueProperty() );
+
+        ToolBar toolBar = new ToolBar( tileLenSpin );
+
+        // TileProperties.setLength( 70D );
 
         Tile t1 = Tiles.ofSolidNEWBreakable(0, 0, 0 );
         Tile t = Tiles.ofSolidWallESWDoorBreakableN( 0, 0, 0 );
@@ -72,9 +78,14 @@ public final class MainPane extends Parent {
         t.setTranslateY( 200D );
 
 
-        MapPane mapP = new MapPane( 10, 9 );
+        MapPane mapP = new MapPane( 3, 4 );
+
+        mainPane.setCenter( mapP );
+
+        mainPane.setTop( toolBar );
+
         // getChildren().setAll(  t1, t );
 
-        getChildren().setAll( mapP );
+        getChildren().setAll( mainPane );
     }
 }

@@ -17,6 +17,7 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -53,10 +54,11 @@ public class Tile extends StackPane implements ITile {
 
 
     } */
-
-
+    /** X Position on grid. */
     int x;
+    /** Y Position on grid. */
     int y;
+    /** Level of map */
     int level;
     /**
      * Segments .
@@ -89,25 +91,23 @@ public class Tile extends StackPane implements ITile {
      * @param y         coordinate ly
      * @param level     level
      */
-    Tile( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
+    Tile(  int x, int y, int level, Wall eastWall, Wall northWall, Wall westWall, Wall southWall ) {
         this.x = x;
         this.y = y;
         this.level = level;
-        this.eW = eastWall;
-        this.sW = southWall;
-        this.nW = northWall;
-        this.wW = westWall;
+        this.eW = null == eastWall ? Wall.empty() : eastWall;
+        this.sW = null == southWall ? Wall.empty() : southWall;
+        this.nW = null ==  northWall ? Wall.empty() : northWall;
+        this.wW = null == westWall ? Wall.empty() : westWall; // Maup;
 
-        init();
-        create();
-        draw();
+        init();     // init code
+        create();   // create all parts
+        draw();     // draw
     }
 
 
     Tile( int x, int y, int level ) {
-        this.x = x;
-        this.y = y;
-        this.level = level;
+        this( x, y, level, null, null, null, null );
     }
 
 
@@ -117,8 +117,8 @@ public class Tile extends StackPane implements ITile {
         draw();
     }
 
-    public static Tile of( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
-        return new Tile( eastWall, northWall, westWall, southWall, x, y, level );
+    public static final Tile of( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
+        return new Tile( x, y, level, eastWall, northWall, westWall, southWall );
     }
 
     public static Tile of( final int x, final int y ) {
@@ -136,17 +136,17 @@ public class Tile extends StackPane implements ITile {
         Wall we =  Wall.solid();
 
 
-        return new Tile( we, we, we, we, x, y, 0 );
+        return new Tile( x, y, 0, we , we, we, we );
     }
 
     private void init() {
         final DoubleProperty tw = TileProperties.widthPropertyFX();
+        final DoubleProperty gnorth = TileProperties.FX_GAP_NORTH_PROP;
+        final DoubleProperty gwest = TileProperties.FX_GAP_WEST_PROP;
 
         prefWidthProperty().bind( tw );
         prefHeightProperty().bind( tw );
 
-        setWidth( getPrefWidth() );
-        setHeight( getPrefHeight() );
 
         tw.addListener( ( obs, oldW, newW ) -> {
 
@@ -154,27 +154,33 @@ public class Tile extends StackPane implements ITile {
                 draw();
             }
         } );
+
+        // layout
+        NumberBinding layoutXBd = tw.multiply( getX() ).add( gwest );
+        NumberBinding layoutYBd = tw.multiply( getY() ).add( gnorth );
+
+        layoutXProperty().bind( layoutXBd );
+        layoutYProperty().bind( layoutYBd );
     }
 
     private void create() {
 
 
         baseP = new Pane();
-        //baseP.prefWidthProperty().bind( widthProperty() );
-
         aviP = new Pane();
-        //aviP.prefWidthProperty().bind( widthProperty() );
 
 
-        createAviPane();
 
-        setOnMouseExited( me -> aviP.setVisible( false ) );
-        setOnMouseEntered( me -> aviP.setVisible( true ) );
+        setOnMouseEntered( me -> System.out.println("tile go")  ); // me -> aviP.setVisible( true )
+        setOnMouseExited( me -> System.out.println( "tile off" ) );
+
         getChildren().addAll( baseP, aviP );
 
     }
 
     private void draw() {
+        setWidth( getPrefWidth() );
+        setHeight( getPrefHeight() );
 
         baseP.getChildren().setAll( createTile() );
 
@@ -182,10 +188,12 @@ public class Tile extends StackPane implements ITile {
         baseP.setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
 
 
-        System.out.println( "Width :" + getWidth() );
-        System.out.println( "Height :" + getHeight() );
+        System.out.println( "Width :" + baseP.getWidth() );
+        System.out.println( "Height :" + baseP.getHeight() );
         System.out.println( "PH :" + getPrefHeight() );
         System.out.println( "PW :" + getPrefWidth() );
+
+        createAviPane();
     }
 
     private void createAviPane() {
@@ -193,25 +201,21 @@ public class Tile extends StackPane implements ITile {
         Wall w = Wall.gate();
         w.getColorPropFX().setValue( Color.RED );
 
-        Shape we = w.toPath( E );
-        Shape ww = w.toPath( W );
-        Shape ws = w.toPath( S );
-        Shape wno = w.toPath( N );
+        Path we = w.toPath( E );
+        Path ww = w.toPath( W );
+        Path ws = w.toPath( S );
+        Path wno = w.toPath( N );
 
         aviP.getChildren().setAll( we, ww, ws, wno );
-        aviP.setVisible( false );
+     //   aviP.setVisible( false );
 
     }
 
     private Collection<? extends Shape> createTile() {
+                // segment size
 
 
-        //double w = TileProperties.getLength();
 
-        // segment size
-
-        //Line wall = new Line( 0D, 0D, 0, h );
-        //wall.setStrokeWidth( 5D );
         List<Shape> segL = new ArrayList<>();
 
         segL.add( eW.toPath( E ) );
@@ -224,7 +228,7 @@ public class Tile extends StackPane implements ITile {
 
         tt.setFont( Font.font( 27D ) );
         tt.setText( getX() + " " + getY() );
-        tt.layoutXProperty().bind( baseP.layoutXProperty().add( 10D ) );
+        tt.layoutXProperty().bind( prefWidthProperty().multiply( 0.1D ) );
         tt.layoutYProperty().bind( prefHeightProperty().subtract( 10D ) );
         segL.add( tt );
 

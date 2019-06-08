@@ -25,9 +25,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
@@ -70,12 +67,20 @@ public class Wall  {
     private WallSegments ws;
 
     private Color color = Color.grayRgb( 47 );
-    private ObjectProperty<Color> fxColorProp = new SimpleObjectProperty<>(this, "FX_WALL_COLOR_PROP", color );
+    private ObjectProperty<Color> fxColorProp = new SimpleObjectProperty<>(this, "FX_WALL_COLOR_PROP", color ); // ;
 
 
     Wall( WallSegments wall ) {
 
     this.ws = wall;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static Wall empty() {
+        return new Wall( WallSegments.NONE );
     }
 
     /**
@@ -95,6 +100,11 @@ public class Wall  {
         return new Wall( WallSegments.DOOR_BREAKABLE );
     }
 
+
+    /**
+     *
+     * @return
+     */
     public static Wall gate() {
         return new Wall( WallSegments.GATE );
     }
@@ -113,12 +123,12 @@ public class Wall  {
      * @return Path
      * @throws NullPointerException
      */
-    public Shape toPath( Position2D p2D ) {
+    public Path toPath( Position2D p2D ) {
         Objects.requireNonNull(p2D);
 
-        Shape path = ws.createPath();
-
-        path.setStroke( fxColorProp.getValue() );
+        Path path = ws.createPath();
+        // System.out.println( fxColorProp.getValue() + "" );
+        path.setStroke( fxColorProp.getValue() ); // System.out.println( fxColorProp.getValue() + "" );
 
         // nothing  when none
         if( WallSegments.NONE == ws ) {
@@ -158,6 +168,7 @@ public class Wall  {
 
         return path;
     }
+
     /**
      * Return a breakable door wall.
      * WallSegments are all kind of walls to draw.
@@ -180,7 +191,7 @@ public class Wall  {
          */
         SOLID( 1L, false ) {
             @Override
-            public Shape createPath() {
+            public Path createPath() {
 
 
                 double w = TileProperties.getLength();
@@ -200,7 +211,7 @@ public class Wall  {
          */
         DOOR_BREAKABLE( 2L, true ) {
             @Override
-            public Shape createPath() {
+            public Path createPath() {
                 //return new Path(  );
                 //double ws = width * SEGMENT_WIDTH;
                 double gysi = TileProperties.getLength();
@@ -213,9 +224,7 @@ public class Wall  {
                 //double doorheight = width * LEN_SMALL;
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build();
-                Rectangle d = new Rectangle( near, 0D, gysi - near, door );
-
-                return Shape.union(path, d);
+                return path;
             }
 
 
@@ -225,18 +234,8 @@ public class Wall  {
          */
         DOOR_UNBREAKABLE( 3L, true ) {
             @Override
-            public Shape createPath() {
-
-
-
-                double gysi = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
-
-                double near = TileProperties.SEGMENT_LEN.doubleValue();
-                double door = TileProperties.SEGMENT_LEN_SMALL.doubleValue();
-
-
-                return   PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build()             ;
+            public Path createPath() {
+                return null;
             }
         },
         /**
@@ -244,7 +243,7 @@ public class Wall  {
          */
         SPECIAL( 9L, false ) {
             @Override
-            public Shape createPath() {
+            public Path createPath() {
                 return null;
             }
         },
@@ -265,7 +264,7 @@ public class Wall  {
          */
         GATE( 4L, false ){
             @Override
-            public Shape createPath() {
+            public Path createPath() {
 
 
                 //double ws = width * SEGMENT_WIDTH;
@@ -283,8 +282,12 @@ public class Wall  {
          */
         ARC_E( 7L, false ){
             @Override
-            public Shape createPath() {
-                return null;
+            public Path createPath() {
+
+
+                double gysi = TileProperties.getLength();
+                double near = TileProperties.SEGMENT_LEN.doubleValue();
+                return PathBuilder.create().strokeWidth( TileProperties.SEGMENT_WIDTH.doubleValue() ).mx( gysi - near ).lx( gysi ).build();
             }
         },
         /**
@@ -292,14 +295,14 @@ public class Wall  {
          */
         ARC_W( 8L, false ) {
             @Override
-            public Shape createPath() {
+            public Path createPath() {
                 return null;
             }
         },
 
         SOLID_WITH_SWITCH( 10L, true) {
             @Override
-            public Shape createPath() {
+            public Path createPath() {
 
 
                 double w = TileProperties.getLength();

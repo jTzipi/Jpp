@@ -17,8 +17,16 @@
 
 package earth.eu.jtzipi.jpp;
 
+/**
+ * Builder.
+ * @param <T> type to build
+ * @author jTzipi
+ */
 public interface IBuilder<T> {
 
-    
+    /**
+     * Create a new instance of <code>T</code>.
+     * @return a new instance
+     */
     T build();
 }
