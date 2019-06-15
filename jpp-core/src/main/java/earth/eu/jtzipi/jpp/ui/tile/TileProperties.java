@@ -21,7 +21,7 @@ import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import sun.java2d.pipe.SpanShapeRenderer;
+
 
 /**
  * Shared Properties.

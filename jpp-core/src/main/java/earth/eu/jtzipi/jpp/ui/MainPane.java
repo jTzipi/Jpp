@@ -17,16 +17,27 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import earth.eu.jtzipi.jpp.ui.tile.Tiles;
+import javafx.beans.Observable;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.converter.DoubleStringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 
 /**
  *
@@ -34,6 +45,7 @@ import java.util.Map;
  */
 public final class MainPane extends Parent {
 
+    private static final Logger LOG = LoggerFactory.getLogger( "MainPane" );
     private static final MainPane SINGLETON = new MainPane();
 
     private Spinner<Double> tileLenSpin;
@@ -56,26 +68,40 @@ public final class MainPane extends Parent {
 
     private void createMainPane() {
 
+        DoubleProperty tw = TileProperties.widthPropertyFX();
+        // main pane
         mainPane = new BorderPane();
 
-        tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
+        //tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
 
         //tileLenSl.setMajorTickUnit( 10D );
 
-        TileProperties.widthPropertyFX().bind( tileLenSpin.valueProperty() );
+        //TileProperties.widthPropertyFX().bind( tileLenSpin.valueProperty() );
 
-        ToolBar toolBar = new ToolBar( tileLenSpin );
+        //
+        ToolBar toolBar = new ToolBar(  );
+
+        MaterialDesignIcon plusIcon = MaterialDesignIcon.PLUS_CIRCLE_OUTLINE;
+        MaterialDesignIcon minusIcon = MaterialDesignIcon.MINUS_CIRCLE_OUTLINE;
+        MaterialDesignIconView plus = new MaterialDesignIconView(plusIcon);
+
+
+
+        MaterialDesignIconView mi = new MaterialDesignIconView(minusIcon);
+        plus.setGlyphSize( 29D );
+        mi.setGlyphSize( 29D );
+
+        plus.setOnMouseClicked( me -> tw.setValue( tw.getValue() + 2D ) );
+        mi.setOnMouseClicked( me -> tw.setValue( tw.getValue() -2D ) );
+
+        Label tileSizeLab = new Label();
+        tileSizeLab.setFont( Font.font(29D) );
+
+        tileSizeLab.textProperty().bind( tw.asString() );
+
+        toolBar.getItems().setAll( plus, mi, tileSizeLab );
 
         // TileProperties.setLength( 70D );
-
-        Tile t1 = Tiles.ofSolidNEWBreakable(0, 0, 0 );
-        Tile t = Tiles.ofSolidWallESWDoorBreakableN( 0, 0, 0 );
-
-        t1.setTranslateX( 550D );
-        t1.setTranslateY( 100D );
-
-        t.setTranslateX( 550D );
-        t.setTranslateY( 200D );
 
 
         MapPane mapP = new MapPane( 3, 4 );

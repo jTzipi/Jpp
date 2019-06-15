@@ -2,12 +2,12 @@ package earth.eu.jtzipi.jpp.ui.map;
 
 import com.sun.prism.PhongMaterial;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.geometry.Orientation;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
+
+import earth.eu.jtzipi.jpp.ui.tile.skin.DefaultWallEdgeSkin;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
 
 
 public class MapEdge extends Control {
@@ -16,7 +16,7 @@ public class MapEdge extends Control {
     EdgeType edgeType;
 
     int tilesPerEdge;
-
+    DoubleProperty fxOffsetProp = new SimpleDoubleProperty(this, "", 50D );
 
 
     private MapEdge(final Position2D position2D, final int tilesPerEdge) {
@@ -25,10 +25,20 @@ public class MapEdge extends Control {
         init();
     }
 
+    public static MapEdge of( Position2D pos2D, int tilesPerEdge ) {
+
+        return new MapEdge( pos2D, tilesPerEdge );
+    }
+
     private void init() {
 
 
 
+    }
+
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return DefaultWallEdgeSkin.of( this );
     }
 
     public int getTilesPerEdge() {
@@ -37,5 +47,8 @@ public class MapEdge extends Control {
 
     public Position2D getPosition() {
         return pos2D;
+    }
+    public final DoubleProperty getOffsetPropFX() {
+        return this.fxOffsetProp;
     }
 }

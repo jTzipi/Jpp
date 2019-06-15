@@ -19,11 +19,13 @@ package earth.eu.jtzipi.jpp.ui.tile.skin;
 
 import earth.eu.jtzipi.jpp.ui.map.MapEdge;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
+import earth.eu.jtzipi.jpp.util.FXUtils;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -31,9 +33,9 @@ import java.util.Objects;
 
 
 /**
- * Default skin for a tile.
+ * Default skin for a map edge.
  */
-public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
+public class DefaultWallEdgeSkin extends SkinBase<MapEdge> {
 
 
     /** Graphics Context. */
@@ -42,9 +44,13 @@ public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
     Canvas canvas;
 
 
-    private DoubleProperty fxWidthProp = new SimpleDoubleProperty(this, "", TileProperties.getLength() );
-
+    // Length binding
     private NumberBinding edgeLenBind;
+
+    private NumberBinding tileOffsetBind;
+
+    private double w;
+    private double h;
 
     /**
      *
@@ -61,41 +67,82 @@ public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
         Objects.requireNonNull( mapEdge );
         DefaultWallEdgeSkin dts = new DefaultWallEdgeSkin( mapEdge );
         dts.init();
-        dts.drawTile();
+
+        // draw edge
+        dts.draw();
+
         return dts;
     }
 
-    @Override
+
     protected void init() {
         MapEdge mapEdge = getSkinnable();
+
+        int t = mapEdge.getTilesPerEdge();
+        double l = TileProperties.getLength();
         DoubleProperty tileWProp = TileProperties.widthPropertyFX();
+
 
 
         switch ( mapEdge.getPosition() ) {
             case E:
-            case W: edgeLenBind = TileProperties.FX_GAP_WEST_PROP.add( mapEdge.getTilesPerEdge() * TileProperties.getLength() );
+            case W:
+                edgeLenBind = TileProperties.FX_GAP_NORTH_PROP.add( tileWProp.multiply( t ) );
+                w = l;
+                h = edgeLenBind.doubleValue();
+
+                break;
+            case S:
+            case N:
+                edgeLenBind = TileProperties.FX_GAP_WEST_PROP.add( tileWProp.multiply( t ) );
+                w = edgeLenBind.doubleValue();
+                h = l;
+            break;
         }
 
-        canvas = new Canvas(getWidth(), getHeight());
-        gc = canvas.getGraphicsContext2D();
+        this.canvas = new Canvas(w, h);
+        this.gc = canvas.getGraphicsContext2D();
 
+        getChildren().add( canvas );
     }
 
     @Override
+    protected double computeMinWidth( double height, double topInset, double rightInset, double bottomInset, double leftInset ) {
+        return w;
+    }
+
+    @Override
+    protected double computeMinHeight( double width, double topInset, double rightInset, double bottomInset, double leftInset ) {
+        return h;
+    }
+
+
+    @Override
+    protected double computePrefWidth( double height, double topInset, double rightInset, double bottomInset, double leftInset ) {
+        return w;
+    }
+
+    @Override
+    protected double computePrefHeight( double width, double topInset, double rightInset, double bottomInset, double leftInset ) {
+        return h;
+    }
+
     protected void resize() {
 
 
     }
 
-    @Override
+
     protected void redraw() {
 
     }
 
-    private void drawTile() {
+    private void draw() {
 
-        Pane pane = new Pane(  );
-       // Tile t = getSkinnable();
+// Tile t = getSkinnable();
+
+        //
+
 
 
 
@@ -103,8 +150,21 @@ public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
         // set background
         gc.fillRect( 0D, 0D, w, h );
 
+        gc.setLineWidth( TileProperties.SEGMENT_WIDTH.doubleValue() );
         gc.setFill( Color.BLACK );
-        //Tile.WallSegments wallw = t.getWallMap().get( Dir2D.WEST );
+
+
+
+        MapEdge m = getSkinnable();
+        for( int i = 0; i < m.getTilesPerEdge(); i++ ) {
+
+            double y  =  // getSkinnable().getOffsetPropFX().doubleValue() +
+                    i * TileProperties.getLength();
+            double x = 0D;
+            gc.strokeLine( x, y, w,y );
+        }
+
+/*
         // line width
         double ws = w / 10D;
 
@@ -116,7 +176,7 @@ public class DefaultWallEdgeSkin extends AbstractWallEdgeSkin {
         gc.translate( 0D, h );
 
 
-        /*
+
         gc.beginPath();
         gc.moveTo( 0D, 0D );
 

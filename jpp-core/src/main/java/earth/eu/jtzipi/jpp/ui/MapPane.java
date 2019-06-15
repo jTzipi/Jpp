@@ -18,6 +18,8 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
+import earth.eu.jtzipi.jpp.ui.map.MapEdge;
+import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import javafx.beans.binding.DoubleBinding;
@@ -33,13 +35,17 @@ import javafx.scene.layout.*;
 public class MapPane extends BorderPane {
 
 
-
+    /** rows of map. */
     int row;
+    /** cols of map .*/
     int column;
+    /** map .*/
     Pane tileP;
 
 
 
+
+    MapEdge westEdge;
 
     DoubleBinding fxTopGapBinding;
 
@@ -87,7 +93,7 @@ public class MapPane extends BorderPane {
 
     private void createMapPane() {
         // new tile pane
-        tileP = new TilePane();
+        tileP = new Pane();
 
         // test
         // IntStream.range(0, 100).mapToObj(  )
@@ -96,13 +102,18 @@ public class MapPane extends BorderPane {
 
             for( int j = 0; j < column; j++ ) {
 
-                Tile tile = Tile.solid( i, j );
+                Tile tile = Tile.solid( j, i );
 
 
-
-                getChildren().add(tile);
+                tileP.getChildren().add(tile);
             }
         }
+
+        setCenter( tileP );
+
+        westEdge = MapEdge.of( Position2D.W, row );
+        westEdge.getOffsetPropFX().bind( fxTopGapBinding );
+        setLeft( westEdge );
     }
 
 }

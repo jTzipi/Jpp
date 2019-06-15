@@ -13,6 +13,7 @@
 
   <modules>
     <module>jpp-core</module>
+    <module>jpp-custom</module>
   </modules>
 
 

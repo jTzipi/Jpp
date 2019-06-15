@@ -18,16 +18,17 @@ package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,7 @@ import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
  *
  * @author jTzipi
  */
-public class Tile extends StackPane implements ITile {
+public class Tile extends Region implements ITile {
 
 
 
@@ -70,10 +71,12 @@ public class Tile extends StackPane implements ITile {
     Wall nW;
 
 
-    Pane baseP;
-    Pane aviP;
+    //Pane baseP;
+    //Pane aviP;
 
+    BooleanProperty fxEdgeWestProp = new SimpleBooleanProperty(this, "", false );
 
+    BooleanProperty fxEdgeEastProp = new SimpleBooleanProperty(this, "", false );
     /**
      * Neighbour tiles.
      */
@@ -99,10 +102,11 @@ public class Tile extends StackPane implements ITile {
         this.sW = null == southWall ? Wall.empty() : southWall;
         this.nW = null ==  northWall ? Wall.empty() : northWall;
         this.wW = null == westWall ? Wall.empty() : westWall; // Maup;
-
-        init();     // init code
+        // init code
         create();   // create all parts
         draw();     // draw
+
+        LoggerFactory.getLogger( "Tile" ).error( "Gysi" );
     }
 
 
@@ -139,7 +143,13 @@ public class Tile extends StackPane implements ITile {
         return new Tile( x, y, 0, we , we, we, we );
     }
 
-    private void init() {
+
+    private void create() {
+
+
+        //baseP = new Pane();
+        //aviP = new Pane();
+
         final DoubleProperty tw = TileProperties.widthPropertyFX();
         final DoubleProperty gnorth = TileProperties.FX_GAP_NORTH_PROP;
         final DoubleProperty gwest = TileProperties.FX_GAP_WEST_PROP;
@@ -148,12 +158,8 @@ public class Tile extends StackPane implements ITile {
         prefHeightProperty().bind( tw );
 
 
-        tw.addListener( ( obs, oldW, newW ) -> {
-
-            if ( oldW != newW ) {
-                draw();
-            }
-        } );
+        //baseP.prefWidthProperty().bind( prefWidthProperty() );
+        //baseP.prefHeightProperty().bind( prefHeightProperty() );
 
         // layout
         NumberBinding layoutXBd = tw.multiply( getX() ).add( gwest );
@@ -161,20 +167,15 @@ public class Tile extends StackPane implements ITile {
 
         layoutXProperty().bind( layoutXBd );
         layoutYProperty().bind( layoutYBd );
-    }
 
-    private void create() {
-
-
-        baseP = new Pane();
-        aviP = new Pane();
-
-
+        tw.addListener( obs -> {
+            draw();
+        } );
 
         setOnMouseEntered( me -> System.out.println("tile go")  ); // me -> aviP.setVisible( true )
         setOnMouseExited( me -> System.out.println( "tile off" ) );
 
-        getChildren().addAll( baseP, aviP );
+        //getChildren().addAll( baseP, aviP );
 
     }
 
@@ -182,31 +183,35 @@ public class Tile extends StackPane implements ITile {
         setWidth( getPrefWidth() );
         setHeight( getPrefHeight() );
 
-        baseP.getChildren().setAll( createTile() );
+        getChildren().setAll( createTile() );
 
 
-        baseP.setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
+        //setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
 
 
-        System.out.println( "Width :" + baseP.getWidth() );
-        System.out.println( "Height :" + baseP.getHeight() );
+        System.out.println( "Width :" + getWidth() );
+        System.out.println( "Height :" +getHeight() );
         System.out.println( "PH :" + getPrefHeight() );
         System.out.println( "PW :" + getPrefWidth() );
+        System.out.println( "W :" + TileProperties.SEGMENT_WIDTH.doubleValue() );
+        System.out.println( "Seg :" + TileProperties.widthPropertyFX() );
+        System.out.println( "width :" + TileProperties.SEGMENT_LEN.doubleValue() );
+        System.out.println( "GADI" );
 
         createAviPane();
     }
 
     private void createAviPane() {
-
+    /*
         Wall w = Wall.gate();
         w.getColorPropFX().setValue( Color.RED );
 
-        Path we = w.toPath( E );
-        Path ww = w.toPath( W );
-        Path ws = w.toPath( S );
-        Path wno = w.toPath( N );
+        Shape we = w.toPath( E );
+        Shape ww = w.toPath( W );
+        Shape ws = w.toPath( S );
+        Shape wno = w.toPath( N );
 
-        aviP.getChildren().setAll( we, ww, ws, wno );
+   */  //   aviP.getChildren().setAll( we, ww, ws, wno );
      //   aviP.setVisible( false );
 
     }
