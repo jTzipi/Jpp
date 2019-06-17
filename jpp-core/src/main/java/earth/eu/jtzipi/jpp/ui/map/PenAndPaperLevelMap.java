@@ -29,17 +29,29 @@ import java.util.List;
  * </p>
  * @author jTzipi
  */
-public class PuPMap {
+public class PenAndPaperLevelMap {
 
+    /** name of map. */
     String name;
+    /** desc of map. */
     String desc;
+    /** dimension x .*/
     int dimX;
+    /** dimension y .*/
     int dimY;
+    /** level .*/
     int level;
+    /** tiles. */
     List<List<IPenAndPaperCell>> map;
 
-
-    PuPMap( int dimX, int dimY, int level, String name ) {
+    /**
+     *
+     * @param dimX
+     * @param dimY
+     * @param level
+     * @param name
+     */
+    PenAndPaperLevelMap( int dimX, int dimY, int level, String name ) {
         this.dimX = dimX;
         this.dimY = dimY;
         this.level = level;
@@ -47,12 +59,30 @@ public class PuPMap {
         this.map = new ArrayList<>(dimX);
     }
 
-
-    public static PuPMap of( final int xDim, final int yDim, final int level, final String nameStr ) {
+    /**
+     * Create a empty level map with [x,y] dimension.
+     * @param xDim x dimension
+     * @param yDim y dimension
+     * @param level level
+     * @param nameStr name
+     * @return map
+     */
+    public static PenAndPaperLevelMap of( final int xDim, final int yDim, final int level, final String nameStr ) {
         if( 0 > xDim || 0 > yDim ) {
 
         }
-        return new PuPMap( xDim, yDim, level, null == nameStr ? "TODO:RENAME" : nameStr );
+        return new PenAndPaperLevelMap( xDim, yDim, level, null == nameStr ? "TODO:RENAME" : nameStr );
+    }
+
+    public int getDimX() {
+        return dimX;
+    }
+    public int getDimY() {
+        return dimY;
+    }
+
+    private void init() {
+        
     }
 
     public void addTile( int x, int y, IPenAndPaperCell tile ) {

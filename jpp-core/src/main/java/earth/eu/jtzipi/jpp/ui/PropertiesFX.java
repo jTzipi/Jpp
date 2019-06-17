@@ -18,17 +18,63 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.*;
 
 /**
  * Global Properties.
  */
 public final class PropertiesFX {
 
+    /** Forbid Instance. */
+    private PropertiesFX() {
+        //
+    }
 
+    /** Min tile length. */
+    public static final double MIN_LEN_TILE = 10D;
+    /** Pref tile length. */
+    public static final double PREF_LEN_TILE = 50D;
+    /** Max tile length. */
+    public static final double MAX_LEN_TILE = 100D;
+
+    /** Main Property every other is derived from. */
+    public static final DoubleProperty FX_WIDTH_PROP = new SimpleDoubleProperty( PREF_LEN_TILE );
+
+    /**
+     *  A single default segment's length.
+     */
+    public static NumberBinding SEGMENT_LEN = FX_WIDTH_PROP.multiply( ISegment.LEN_DEFAULT );
+    /**
+     * A small segment's .
+     */
+    public static NumberBinding SEGMENT_LEN_SMALL  = FX_WIDTH_PROP.multiply( ISegment.LEN_SMALL );
+    /**
+     * A large segment.
+     */
+    public static NumberBinding SEGMENT_LEN_LARGE = FX_WIDTH_PROP.multiply( ISegment.LEN_LARGE );
+    /**
+     * Width of segment.
+     */
+    public static NumberBinding SEGMENT_WIDTH = FX_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
+
+    /**
+     * North Edge length.
+     */
+    public static DoubleProperty FX_GAP_EDGE_NORTH_PROP = new SimpleDoubleProperty( 25D );
+    /**
+     * West edge length.
+     */
+    public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
+
+    /**
+     * Show edge prop.
+     */
     public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty();
-
-
+    /** Mouse map grid x position.  */
+    public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty();
+    /** Mouse map grid y position.  */
+    public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty();
 
 }

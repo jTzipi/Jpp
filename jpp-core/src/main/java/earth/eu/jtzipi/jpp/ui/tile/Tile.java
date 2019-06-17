@@ -16,18 +16,18 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
+import earth.eu.jtzipi.jpp.ui.PropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
  *
  * @author jTzipi
  */
-public class Tile extends Region implements ITile {
+public class Tile extends Region {
 
 
 
@@ -55,12 +55,7 @@ public class Tile extends Region implements ITile {
 
 
     } */
-    /** X Position on grid. */
-    int x;
-    /** Y Position on grid. */
-    int y;
-    /** Level of map */
-    int level;
+
     /**
      * Segments .
      */
@@ -70,38 +65,34 @@ public class Tile extends Region implements ITile {
     Wall sW;
     Wall nW;
 
-
+    final IPenAndPaperCell ppc;
     //Pane baseP;
     //Pane aviP;
 
-    BooleanProperty fxEdgeWestProp = new SimpleBooleanProperty(this, "", false );
+    BooleanProperty fxEdgeWestProp = new SimpleBooleanProperty(this, "FX_EDGE_WEST", false );
 
-    BooleanProperty fxEdgeEastProp = new SimpleBooleanProperty(this, "", false );
+    BooleanProperty fxEdgeEastProp = new SimpleBooleanProperty(this, "FX_EDGE_EAST", false );
     /**
      * Neighbour tiles.
      */
-    EnumMap<Position2D, ITile> neighbourM = new EnumMap<>( Position2D.class );
+
 
 
     /**
      * Tile complete constructor.
      *
-     * @param eastWall  wall east
-     * @param northWall wall north
-     * @param westWall  wall west
-     * @param southWall wall south
-     * @param x         coordinate lx
-     * @param y         coordinate ly
-     * @param level     level
+     * @param ppc pen and paper cell
+
+     *
      */
-    Tile(  int x, int y, int level, Wall eastWall, Wall northWall, Wall westWall, Wall southWall ) {
-        this.x = x;
-        this.y = y;
-        this.level = level;
-        this.eW = null == eastWall ? Wall.empty() : eastWall;
-        this.sW = null == southWall ? Wall.empty() : southWall;
-        this.nW = null ==  northWall ? Wall.empty() : northWall;
-        this.wW = null == westWall ? Wall.empty() : westWall; // Maup;
+    Tile( IPenAndPaperCell ppc ) {
+        this.ppc = ppc;
+        //this.y = y;
+        //this.level = level;
+        this.eW = Wall.ofId( ppc.getIdWallEast() );
+        this.sW = Wall.ofId( ppc.getIdWallSouth() );
+        this.nW = Wall.ofId( ppc.getIdWallNorth() );
+        this.wW = Wall.ofId( ppc.getIdWallWest()); // Maup;
         // init code
         create();   // create all parts
         draw();     // draw
@@ -111,19 +102,17 @@ public class Tile extends Region implements ITile {
 
 
     Tile( int x, int y, int level ) {
-        this( x, y, level, null, null, null, null );
+        this( PenAndPaperCell.ofEmpty( x, y, level ) );
     }
 
 
     Tile() {
-
+        this( PenAndPaperCell.ofEmpty( 0, 0, 0 ) );
         // createTile();
         draw();
     }
 
-    public static final Tile of( Wall eastWall, Wall northWall, Wall westWall, Wall southWall, int x, int y, int level ) {
-        return new Tile( x, y, level, eastWall, northWall, westWall, southWall );
-    }
+
 
     public static Tile of( final int x, final int y ) {
         if ( 0 > x || 0 > y ) {
@@ -132,16 +121,17 @@ public class Tile extends Region implements ITile {
         }
 
 
-        return new Tile( x, y, LEVEL_DEFAULT );
+        return new Tile( x, y, IPenAndPaperCell.LEVEL_DEFAULT );
     }
 
     public static Tile solid( int x, int y ) {
 
-        Wall we =  Wall.solid();
 
 
-        return new Tile( x, y, 0, we , we, we, we );
+
+        return new Tile( PenAndPaperCell.ofEmpty( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
     }
+
 
 
     private void create() {
@@ -151,8 +141,8 @@ public class Tile extends Region implements ITile {
         //aviP = new Pane();
 
         final DoubleProperty tw = TileProperties.widthPropertyFX();
-        final DoubleProperty gnorth = TileProperties.FX_GAP_NORTH_PROP;
-        final DoubleProperty gwest = TileProperties.FX_GAP_WEST_PROP;
+        final DoubleProperty gnorth = PropertiesFX.FX_GAP_EDGE_NORTH_PROP;
+        final DoubleProperty gwest = PropertiesFX.FX_GAP_EDGE_WEST_PROP;
 
         prefWidthProperty().bind( tw );
         prefHeightProperty().bind( tw );
@@ -162,8 +152,8 @@ public class Tile extends Region implements ITile {
         //baseP.prefHeightProperty().bind( prefHeightProperty() );
 
         // layout
-        NumberBinding layoutXBd = tw.multiply( getX() ).add( gwest );
-        NumberBinding layoutYBd = tw.multiply( getY() ).add( gnorth );
+        NumberBinding layoutXBd = tw.multiply( ppc.getX() ).add( gwest );
+        NumberBinding layoutYBd = tw.multiply( ppc.getY() ).add( gnorth );
 
         layoutXProperty().bind( layoutXBd );
         layoutYProperty().bind( layoutYBd );
@@ -232,7 +222,7 @@ public class Tile extends Region implements ITile {
 
 
         tt.setFont( Font.font( 27D ) );
-        tt.setText( getX() + " " + getY() );
+        tt.setText( ppc.getX() + " " + ppc.getY() );
         tt.layoutXProperty().bind( prefWidthProperty().multiply( 0.1D ) );
         tt.layoutYProperty().bind( prefHeightProperty().subtract( 10D ) );
         segL.add( tt );
@@ -240,40 +230,7 @@ public class Tile extends Region implements ITile {
         return segL;
     }
 
-    @Override
-    public int getX() {
-        return x;
-    }
 
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public int getLevel() {
-        return level;
-    }
-
-    @Override
-    public ITile getNeighbour( Position2D position2D ) {
-        return neighbourM.getOrDefault( position2D, UnknownTile.SINGLETON );
-    }
-
-    @Override
-    public void link( ITile cell, boolean bidiProp ) {
-
-    }
-
-    @Override
-    public void unlink( ITile cell, boolean bidiProp ) {
-
-    }
-
-    @Override
-    public boolean isLinked( ITile cell ) {
-        return false;
-    }
 
 
 //    public static final class Builder implements IBuilder<Tile> {

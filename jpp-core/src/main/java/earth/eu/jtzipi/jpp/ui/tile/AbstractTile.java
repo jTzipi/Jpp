@@ -17,23 +17,17 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
-import java.util.Set;
 
-public abstract class AbstractTile implements ITile {
+import javafx.scene.layout.Region;
 
-
-
+public abstract class AbstractTile extends Region {
 
 
-    @Override
-    public int getX() {
-        return 0;
-    }
 
-    @Override
-    public int getY() {
-        return 0;
-    }
+
+
+
+
 
 
 

@@ -15,7 +15,7 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.tile;
+package earth.eu.jtzipi.jpp.cell;
 
 /**
  * Base cell.

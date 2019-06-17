@@ -17,24 +17,15 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
-import earth.eu.jtzipi.jpp.ui.tile.Tile;
+import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
-import earth.eu.jtzipi.jpp.ui.tile.Tiles;
-import javafx.beans.Observable;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,8 +94,8 @@ public final class MainPane extends Parent {
 
         // TileProperties.setLength( 70D );
 
-
-        MapPane mapP = new MapPane( 3, 4 );
+        PenAndPaperLevelMap pplm = PenAndPaperLevelMap.of( 3, 4, 0, "Gysi" );
+        MapPane mapP = new MapPane( pplm );
 
         mainPane.setCenter( mapP );
 

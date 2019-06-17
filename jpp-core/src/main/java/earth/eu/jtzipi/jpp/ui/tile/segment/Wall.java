@@ -1,8 +1,10 @@
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
+import earth.eu.jtzipi.jpp.ui.PropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
@@ -15,25 +17,24 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A wall in a tile.
  */
 public class Wall  {
 
-
+    private static Map<Long, WallSegments> segments = new HashMap<>();
     // Rotate by 90° clockwise
     private static final Rotate ROTATE_90_DEGREE = new Rotate( 90D );
     // Flip
     private static final Rotate ROTATE_180_DEGREE = new Rotate( 180D );
     // Translate south
-    private static final Translate TLATE_SOUTH = new Translate( 0D, TileProperties.getLength() );
+    private static final Translate TLATE_SOUTH = new Translate( 0D, PropertiesFX.FX_WIDTH_PROP.doubleValue() );
     // Translate east
-    private static final Translate TLATE_EAST = new Translate( TileProperties.getLength(), 0D);
+    private static final Translate TLATE_EAST = new Translate( PropertiesFX.FX_WIDTH_PROP.doubleValue(), 0D);
 
 
     static {
@@ -41,17 +42,24 @@ public class Wall  {
          * Bind everything to tiles width.
          */
 
-        ROTATE_180_DEGREE.pivotXProperty().bind( TileProperties.widthPropertyFX().divide( 2D ) );
+        DoubleProperty widthProp = PropertiesFX.FX_WIDTH_PROP;
+        ROTATE_180_DEGREE.pivotXProperty().bind( widthProp.divide( 2D ) );
+        TLATE_SOUTH.yProperty().bind( widthProp );
+        TLATE_EAST.xProperty().bind( widthProp );
 
-        TLATE_SOUTH.yProperty().bind( TileProperties.widthPropertyFX() );
+        for( WallSegments wallSegments : WallSegments.values() ) {
+            segments.put( wallSegments.getId(), wallSegments );
+        }
 
-        TLATE_EAST.xProperty().bind( TileProperties.widthPropertyFX() );
     }
     // Wall segment type
     private WallSegments ws;
 
     private Color color = Color.grayRgb( 47 );
+
     private ObjectProperty<Color> fxColorProp = new SimpleObjectProperty<>(this, "FX_WALL_COLOR_PROP", color );
+
+
 
 
     Wall( WallSegments wall ) {
@@ -59,6 +67,15 @@ public class Wall  {
         this.ws = wall;
     }
 
+
+    /**
+     * Create a wall by Id.
+     * @param id wall id
+     * @return wall if known or empty wall
+     */
+    public static Wall ofId( long id ) {
+        return new Wall( segments.getOrDefault( id, WallSegments.NONE ) );
+    }
     /**
      * Return a solid wall.
      *  pos2D position ( if null {@linkplain Position2D#E})

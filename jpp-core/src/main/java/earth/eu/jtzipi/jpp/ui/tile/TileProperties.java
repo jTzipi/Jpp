@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 /**
  * Shared Properties.
  */
+@Deprecated
 public final class TileProperties {
 
 
@@ -35,24 +36,24 @@ public final class TileProperties {
     public static final double MAX_LEN_TILE = 100D;
 
     // Main Property every other is derived from
-    private static final DoubleProperty fxWidthProp = new SimpleDoubleProperty( PREF_LEN_TILE );
+    private static final DoubleProperty FX_WIDTH_PROP = new SimpleDoubleProperty( PREF_LEN_TILE );
 
     /**
      *  A single default segment's length.
      */
-    public static NumberBinding SEGMENT_LEN = fxWidthProp.multiply( ISegment.LEN_DEFAULT );
+    public static NumberBinding SEGMENT_LEN = FX_WIDTH_PROP.multiply( ISegment.LEN_DEFAULT );
     /**
      * A small segment's .
      */
-    public static NumberBinding SEGMENT_LEN_SMALL  = fxWidthProp.multiply( ISegment.LEN_SMALL );
+    public static NumberBinding SEGMENT_LEN_SMALL  = FX_WIDTH_PROP.multiply( ISegment.LEN_SMALL );
     /**
      * A large segment.
      */
-    public static NumberBinding SEGMENT_LEN_LARGE = fxWidthProp.multiply( ISegment.LEN_LARGE );
+    public static NumberBinding SEGMENT_LEN_LARGE = FX_WIDTH_PROP.multiply( ISegment.LEN_LARGE );
     /**
      * Width of segment.
      */
-    public static NumberBinding SEGMENT_WIDTH = fxWidthProp.multiply( ISegment.SEGMENT_WIDTH );
+    public static NumberBinding SEGMENT_WIDTH = FX_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
 
     public static DoubleProperty FX_GAP_NORTH_PROP = new SimpleDoubleProperty( 25D );
     public static DoubleProperty FX_GAP_WEST_PROP = new SimpleDoubleProperty( 24D );
@@ -66,11 +67,11 @@ public final class TileProperties {
 
 
     public static double getLength() {
-        return fxWidthProp.getValue();
+        return FX_WIDTH_PROP.getValue();
     }
 
     public static DoubleProperty widthPropertyFX() {
-        return fxWidthProp;
+        return FX_WIDTH_PROP;
     }
 
 }

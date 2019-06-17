@@ -14,7 +14,9 @@
  *    limitations under the License.
  *
  */
-package earth.eu.jtzipi.jpp.ui.tile;
+package earth.eu.jtzipi.jpp.cell;
+
+import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 
 import java.util.Collections;
 import java.util.Set;
@@ -33,13 +35,13 @@ public interface ICellQuad extends ICell {
     int UNDEFINED = -1;
 
     /**
-     * X Coordinate of this cell.
-     * @return
+     * X Coordinate of this tile.
+     * @return lx coordinate
      */
     int getX();
 
     /**
-     * Y Coordinate of this cell.
+     * Y Coordinate of this tile.
      * @return
      */
     int getY();
@@ -75,7 +77,7 @@ public interface ICellQuad extends ICell {
      *
      * @param cell     other cell
      * @param bidiProp unlink other cell with this too (if linked)
-     * @see #link(earth.eu.jtzipi.jpp.ui.tile.ICellQuad, boolean)
+     * @see #link(ICellQuad, boolean)
      */
     void unlink( ICellQuad cell, boolean bidiProp );
 

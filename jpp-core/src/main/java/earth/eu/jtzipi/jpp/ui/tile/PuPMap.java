@@ -17,9 +17,10 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Pan and Paper map.
@@ -35,7 +36,7 @@ public class PuPMap {
     int dimX;
     int dimY;
     int level;
-    List<List<ITile>> map;
+    List<List<IPenAndPaperCell>> map;
 
 
     PuPMap( int dimX, int dimY, int level, String name ) {
@@ -54,7 +55,7 @@ public class PuPMap {
         return new PuPMap( xDim, yDim, level, null == nameStr ? "TODO:RENAME" : nameStr );
     }
 
-    public void addTile( int x, int y, ITile tile ) {
+    public void addTile( int x, int y, IPenAndPaperCell tile ) {
         if( 0 > x || 0 > y || x >= dimX || y >= dimY ) {
             throw new IllegalArgumentException("lx/ly must >= 0 and < dimX/dimY! Your lx/ly = ");
         }

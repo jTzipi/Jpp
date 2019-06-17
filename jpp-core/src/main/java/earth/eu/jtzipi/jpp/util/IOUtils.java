@@ -15,47 +15,30 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.cell;
+package earth.eu.jtzipi.jpp.util;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 
+ */
+public class IOUtils {
 
 
-import java.util.Set;
-
-public interface IPenAndPaperCell extends ICellQuad {
-
-
-    /**
-     * Default level.
-     */
-    int LEVEL_DEFAULT = 0;
-
-        /**
-         * Level of tile.
-         * <p>
-         *     Level below 0 should be level beneath earth.
-         * </p>
-         * @return level
-         */
-    int getLevel();
-
-    long getIdWallNorth();
-
-    long getIdWallEast();
-
-    long getIdWallWest();
-
-    long getIdWallSouth();
-
-    long getIdFloor();
-
-    Set<Tag> getTagSet();
-
-    interface Tag {
-
-
+    private IOUtils() {
 
     }
 
+    public static String parseSVG( final Path pathToSVG ) throws IOException {
 
 
+        List<String> svg = Files.readAllLines(pathToSVG);
+
+        return svg.stream().collect( Collectors.joining(" "));
+    }
 
 }

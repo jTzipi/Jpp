@@ -18,34 +18,35 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import earth.eu.jtzipi.jpp.ui.map.MapEdge;
+import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
+import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
-import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.*;
-
-
-
 
 /**
  * Pane for displaying a single map.
  */
-public class MapPane extends BorderPane {
+public class MapPane extends Pane {
 
+    /** Show north edge. */
+    BooleanProperty fxShowN_EdgeProp = new SimpleBooleanProperty( this, "FX_SHOW_NORTH_EDGE_PROP", false );
+    /** Show east edge. */
+    BooleanProperty fxShowE_EdgeProp = new SimpleBooleanProperty( this, "FX_SHOW_NORTH_EDGE_PROP", false );
 
     /** rows of map. */
     int row;
     /** cols of map .*/
     int column;
     /** map .*/
-    Pane tileP;
+    // Pane tileP;
+    /** content of map. */
+    PenAndPaperLevelMap pplm;
 
-
-
-
-    MapEdge westEdge;
 
     DoubleBinding fxTopGapBinding;
 
@@ -55,14 +56,13 @@ public class MapPane extends BorderPane {
 
     DoubleBinding fxHeightBinding;
 
+
     /**
      * MapPanel.
-     * @param rows
-     * @param columns
+     *
      */
-     MapPane( final int rows, final int columns ) {
-        this.row = rows;
-        this.column = columns;
+     MapPane( PenAndPaperLevelMap penAndPaperLevelMap ) {
+        this.pplm = penAndPaperLevelMap;
 
         init();
         createMapPane();
@@ -73,7 +73,7 @@ public class MapPane extends BorderPane {
 
     private void init() {
 
-        final DoubleProperty tw = TileProperties.widthPropertyFX();
+        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
         // set half of tile width gap
         fxLeftGapBinding = tw.multiply( 0.5D );
         fxTopGapBinding = tw.multiply( 0.5D );
@@ -93,27 +93,31 @@ public class MapPane extends BorderPane {
 
     private void createMapPane() {
         // new tile pane
-        tileP = new Pane();
+
 
         // test
         // IntStream.range(0, 100).mapToObj(  )
 
-        for( int i = 0; i < row; i++ ) {
+        boolean ee = fxShowE_EdgeProp.getValue();
+        boolean en = fxShowN_EdgeProp.getValue();
 
-            for( int j = 0; j < column; j++ ) {
+        // rows
+        for( int i = 0; i < pplm.getDimY(); i++ ) {
 
-                Tile tile = Tile.solid( j, i );
+            getChildren().add( EdgeTile.of( Position2D.W, i ) );
+
+            for( int j = 0; j < pplm.getDimX(); j++ ) {
+
+                Tile tile = Tile.solid( i + 1, j );
 
 
-                tileP.getChildren().add(tile);
+                getChildren().add(tile);
             }
         }
 
-        setCenter( tileP );
 
-        westEdge = MapEdge.of( Position2D.W, row );
-        westEdge.getOffsetPropFX().bind( fxTopGapBinding );
-        setLeft( westEdge );
+
+
     }
 
 }

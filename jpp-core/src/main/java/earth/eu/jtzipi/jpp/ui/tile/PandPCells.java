@@ -18,31 +18,38 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
+import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 
 /**
  * Catalogue of tiles.
  */
-public final class Tiles {
+public final class PandPCells {
     // , IFloor floor
-    private Tiles() {}
+    private PandPCells() {}
 
 
 
-    public static Tile ofSolidWallESWDoorBreakableN( int x, int y, int level) {
+    public static IPenAndPaperCell ofSolidWallESWDoorBreakableN( int x, int y, int level) {
 
         Wall solidWall = Wall.solid();
         Wall doorBreakable = Wall.doorBreakable(  );
 
+        long idSolid = Wall.WallSegments.SOLID.getId();
+        long idDoorB = Wall.WallSegments.DOOR_BREAKABLE.getId();
 
-        return Tile.of( solidWall, doorBreakable, solidWall, solidWall, x, y, level );
+        return PenAndPaperCell.of( x, y, level, idDoorB, idSolid, idSolid, idSolid, 0, null );
     }
 
-    public static Tile ofSolidNEWBreakable( int x, int y, int level) {
+    public static IPenAndPaperCell ofSolidNEWBreakable( int x, int y, int level) {
 
-        Wall solidWall = Wall.solid();
-        Wall doorBreakable = Wall.doorBreakable(  );
 
-        return Tile.of( solidWall, solidWall, solidWall, doorBreakable, x, y, level );
+
+        long idSolid = Wall.WallSegments.SOLID.getId();
+        long idDoorB = Wall.WallSegments.DOOR_BREAKABLE.getId();
+
+        return PenAndPaperCell.of( x, y, level, idSolid, idSolid, idSolid, idDoorB, 0, null );
     }
 }
