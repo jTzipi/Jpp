@@ -140,7 +140,7 @@ public class Tile extends Region {
         //baseP = new Pane();
         //aviP = new Pane();
 
-        final DoubleProperty tw = TileProperties.widthPropertyFX();
+        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP; // TileProperties.widthPropertyFX();
         final DoubleProperty gnorth = PropertiesFX.FX_GAP_EDGE_NORTH_PROP;
         final DoubleProperty gwest = PropertiesFX.FX_GAP_EDGE_WEST_PROP;
 
