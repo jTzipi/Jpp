@@ -17,6 +17,9 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
+/**
+ * 2D Position.
+ */
 public enum Position2D {
 
     /**

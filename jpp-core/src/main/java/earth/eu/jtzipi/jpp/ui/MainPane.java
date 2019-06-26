@@ -20,26 +20,25 @@ package earth.eu.jtzipi.jpp.ui;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
-import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 
 /**
- *
+ * Main panel.
  * @author jTzipi
  */
-public final class MainPane extends Parent {
+public final class MainPane extends Pane {
 
-    private static final Logger LOG = LoggerFactory.getLogger( "MainPane" );
+
     private static final MainPane SINGLETON = new MainPane();
 
-    private Spinner<Double> tileLenSpin;
+
 
     private BorderPane mainPane;
     /**
@@ -59,10 +58,10 @@ public final class MainPane extends Parent {
 
     private void createMainPane() {
 
-        DoubleProperty tw = TileProperties.widthPropertyFX();
+        DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
         // main pane
         mainPane = new BorderPane();
-
+        mainPane.prefWidthProperty().bind( prefWidthProperty() );
         //tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
 
         //tileLenSl.setMajorTickUnit( 10D );
@@ -72,13 +71,24 @@ public final class MainPane extends Parent {
         //
         ToolBar toolBar = new ToolBar(  );
 
+        // increase grid size
         MaterialDesignIcon plusIcon = MaterialDesignIcon.PLUS_CIRCLE_OUTLINE;
+        // decrease grid size
         MaterialDesignIcon minusIcon = MaterialDesignIcon.MINUS_CIRCLE_OUTLINE;
+        // show edge
+
+        MaterialDesignIcon gridIcon = MaterialDesignIcon.GRID;
+
+        MaterialDesignIcon edgeIcon = MaterialDesignIcon.IMAGE_FILTER_NONE;
+
+
+
+
         MaterialDesignIconView plus = new MaterialDesignIconView(plusIcon);
-
-
-
         MaterialDesignIconView mi = new MaterialDesignIconView(minusIcon);
+        MaterialDesignIconView grid = new MaterialDesignIconView( gridIcon );
+    MaterialDesignIconView edge = new MaterialDesignIconView(edgeIcon);
+
         plus.setGlyphSize( 29D );
         mi.setGlyphSize( 29D );
 
@@ -90,7 +100,7 @@ public final class MainPane extends Parent {
 
         tileSizeLab.textProperty().bind( tw.asString() );
 
-        toolBar.getItems().setAll( plus, mi, tileSizeLab );
+        toolBar.getItems().setAll( grid,  plus, mi, tileSizeLab );
 
         // TileProperties.setLength( 70D );
 
@@ -100,6 +110,7 @@ public final class MainPane extends Parent {
         mainPane.setCenter( mapP );
 
         mainPane.setTop( toolBar );
+
 
         // getChildren().setAll(  t1, t );
 

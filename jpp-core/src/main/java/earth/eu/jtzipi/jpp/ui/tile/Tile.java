@@ -24,7 +24,7 @@ import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.List;
 
 import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
@@ -183,9 +182,9 @@ public class Tile extends Region {
         System.out.println( "Height :" +getHeight() );
         System.out.println( "PH :" + getPrefHeight() );
         System.out.println( "PW :" + getPrefWidth() );
-        System.out.println( "W :" + TileProperties.SEGMENT_WIDTH.doubleValue() );
-        System.out.println( "Seg :" + TileProperties.widthPropertyFX() );
-        System.out.println( "width :" + TileProperties.SEGMENT_LEN.doubleValue() );
+        System.out.println( "W :" + PropertiesFX.SEGMENT_WIDTH.doubleValue() );
+
+        System.out.println( "width :" + PropertiesFX.SEGMENT_LEN.doubleValue() );
         System.out.println( "GADI" );
 
         createAviPane();

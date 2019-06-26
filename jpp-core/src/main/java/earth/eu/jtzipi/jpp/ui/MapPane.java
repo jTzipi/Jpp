@@ -26,7 +26,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 
 /**
  * Pane for displaying a single map.
@@ -102,15 +102,17 @@ public class MapPane extends Pane {
         boolean en = fxShowN_EdgeProp.getValue();
 
         // rows
-        for( int i = 0; i < pplm.getDimY(); i++ ) {
+        for( int i = 0; i < pplm.getDimX(); i++ ) {
 
-            getChildren().add( EdgeTile.of( Position2D.W, i ) );
+            getChildren().add( EdgeTile.of( Position2D.N, i ) );
 
-            for( int j = 0; j < pplm.getDimX(); j++ ) {
+            for( int j = 0; j < pplm.getDimY(); j++ ) {
 
-                Tile tile = Tile.solid( i + 1, j );
+                EdgeTile edge = EdgeTile.of( Position2D.W, j );
 
+                Tile tile = Tile.solid( i + 1, j + 1 );
 
+                getChildren().add( edge );
                 getChildren().add(tile);
             }
         }

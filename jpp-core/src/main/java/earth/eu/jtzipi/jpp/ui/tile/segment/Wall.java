@@ -2,8 +2,6 @@ package earth.eu.jtzipi.jpp.ui.tile.segment;
 
 import earth.eu.jtzipi.jpp.ui.PropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
-import earth.eu.jtzipi.jpp.ui.tile.TileProperties;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,15 +9,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
-
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 /**
  * A wall in a tile.
@@ -102,9 +97,11 @@ public class Wall  {
         return new Wall( WallSegments.DOOR_BREAKABLE );
     }
 
+
     public static Wall gate() {
         return new Wall( WallSegments.GATE );
     }
+
     /**
      * Wall color property.
      * @return wall color property
@@ -191,8 +188,8 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
+                double w = PropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();
 
@@ -210,17 +207,15 @@ public class Wall  {
             @Override
             public Shape createPath() {
                 //return new Path(  );
-                //double ws = width * SEGMENT_WIDTH;
-                double gysi = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
 
-                double near = TileProperties.SEGMENT_LEN.doubleValue();
-                double door = TileProperties.SEGMENT_LEN_SMALL.doubleValue();
-                //double offDoor = LEN_DEFAULT * width;
-                //double endDoor = width - offDoor;
-                //double doorheight = width * LEN_SMALL;
+                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                Path path = PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build();
+                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
+                double door = PropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
+
+
+                Path path = PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0D ).lx( gysi ).build();
                 Rectangle d = new Rectangle( near, 0D, gysi - near, door );
 
                 return Shape.union(path, d);
@@ -237,11 +232,11 @@ public class Wall  {
 
 
 
-                double gysi = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
+                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                double near = TileProperties.SEGMENT_LEN.doubleValue();
-                double door = TileProperties.SEGMENT_LEN_SMALL.doubleValue();
+                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
+                double door = PropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
 
 
                 return   PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build()             ;
@@ -277,10 +272,10 @@ public class Wall  {
 
 
                 //double ws = width * SEGMENT_WIDTH;
-                double gysi = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
+                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                double near = TileProperties.SEGMENT_LEN.doubleValue();
+                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
 
 
                 return PathBuilder.create().strokeWidth( ws ).lx( near ).mx( gysi - near ).lx( gysi ).build();
@@ -310,8 +305,8 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = TileProperties.getLength();
-                double ws = TileProperties.SEGMENT_WIDTH.doubleValue();
+                double w = PropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();
 

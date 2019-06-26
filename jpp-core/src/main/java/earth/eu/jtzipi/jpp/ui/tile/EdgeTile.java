@@ -20,16 +20,11 @@ package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.ui.PropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
 import javafx.scene.layout.Region;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 
 
@@ -71,16 +66,18 @@ public class EdgeTile extends Region {
         prefWidthProperty().bind( tw );
         prefHeightProperty().bind( tw );
 
+        tw.addListener( iv -> create() );
+
         BooleanBinding mouseOverBind = null;
 
         switch ( p2D ) {
             case E:
-            case W: layoutYProperty().bind( tw.multiply( idx ).add( PropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
-                mouseOverBind = PropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx );
+            case W: layoutYProperty().bind( tw.multiply( idx + 1 ).add( PropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
+                mouseOverBind = PropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
             break;
             case S:
-            case N: layoutXProperty().bind( tw.multiply( idx ).add( PropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
-            mouseOverBind = PropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx );
+            case N: layoutXProperty().bind( tw.multiply( idx +1 ).add( PropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+            mouseOverBind = PropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx +1);
             break;
         }
 
