@@ -14,6 +14,7 @@
   <modules>
     <module>jpp-core</module>
     <module>jpp-custom</module>
+    <module>jpp-io</module>
   </modules>
 
 
