@@ -90,6 +90,10 @@ public class PenAndPaperLevelMap implements IPenAndPaperMap {
 
     }
 
+    public String getDescription() {
+        return desc;
+    }
+
     @Override
     public String getName() {
         return name;
