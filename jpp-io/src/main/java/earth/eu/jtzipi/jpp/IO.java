@@ -53,6 +53,7 @@ public final class IO {
     private static final String PATH_UNKNOWN = "";
     private static final Logger LOG = LoggerFactory.getLogger( "IOGysi" );
 
+    private static final Path PATH_TO_RES = PATH_WORK_DIR.resolve( "jpp-core/src/main/resources/" );
     private IO() {
 
 
@@ -200,6 +201,26 @@ public final class IO {
             LOG.error( "Fehler bei lesen des Pic ' " + path + "' " );
             throw ioE;
         }
+    }
+
+    /**
+     * Load a image from resource path.
+     * @param resPath sub path or resources
+     * @return image if path is valid
+     * @throws IOException image path not valid or io error
+     * @throws NullPointerException if {@code resPath} is null
+     */
+    public static Image loadImageFromRes( final Path resPath ) throws IOException {
+        Objects.requireNonNull( resPath );
+
+        Path path = PATH_TO_RES.resolve( resPath );
+        if( !Files.isReadable( path )) {
+            LOG.warn( "Failed to read image '" + path + "'" );
+            throw new IOException( "File not readable '" + path + "'" );
+
+        }
+
+        return loadImage( path );
     }
 
     /**

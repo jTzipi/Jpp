@@ -18,20 +18,31 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
+import earth.eu.jtzipi.jpp.IO;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
+import earth.eu.jtzipi.jpp.util.IOUtils;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Pane for displaying a single map.
  */
 public class MapPane extends Pane {
+
+
+
 
     /** Show north edge. */
     BooleanProperty fxShowN_EdgeProp = new SimpleBooleanProperty( this, "FX_SHOW_NORTH_EDGE_PROP", false );
@@ -86,6 +97,19 @@ public class MapPane extends Pane {
         prefHeightProperty().bind( fxHeightBinding );
         prefWidthProperty().bind( fxWidthBinding );
 
+        try {
+            Image bg = IO.loadImageFromRes( Paths.get("bg/bg_01.jpg") );
+            System.out.println("habe " + bg.toString() );
+
+            BackgroundImage bgImage = new BackgroundImage( bg, BackgroundRepeat.NO_REPEAT, null, null, null );
+
+
+
+            setBackground( new Background( bgImage ) );
+        } catch ( final IOException ioE ) {
+
+            System.out.println("Fehler" + ioE);
+        }
 
     }
 

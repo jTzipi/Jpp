@@ -21,6 +21,9 @@ package earth.eu.jtzipi.jpp;
 import earth.eu.jtzipi.jpp.ui.MainPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 /**
@@ -35,10 +38,18 @@ public final class JPP extends Application {
 
         Scene scene = new Scene( MainPane.create(), 750, 750);
 
+
+
+
+
         priStage.setTitle("Java Pen and Paper World!");
         priStage.setScene(scene);
         priStage.show();
     }
+
+
+
+
 
     /**
      * JML start.

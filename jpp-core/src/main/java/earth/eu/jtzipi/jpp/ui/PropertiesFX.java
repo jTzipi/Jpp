@@ -22,6 +22,7 @@ import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 
+
 /**
  * Global Properties.
  */
@@ -38,6 +39,16 @@ public final class PropertiesFX {
     public static final double PREF_LEN_TILE = 50D;
     /** Max tile length. */
     public static final double MAX_LEN_TILE = 100D;
+
+
+    /**
+     * Default Window width.
+     */
+    public static final double WINDOW_W = 750D;
+    /**
+     * Default window height
+     */
+    public static final double WINDOW_H = 750D;
 
     /** Main Property every other is derived from. */
     public static final DoubleProperty FX_WIDTH_PROP = new SimpleDoubleProperty( PREF_LEN_TILE );
@@ -58,7 +69,6 @@ public final class PropertiesFX {
      * Width of segment.
      */
     public static NumberBinding SEGMENT_WIDTH = FX_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
-
     /**
      * North Edge length.
      */
@@ -68,6 +78,9 @@ public final class PropertiesFX {
      */
     public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
 
+    public static DoubleProperty FX_WINDOW_WIDTH_PROP = new SimpleDoubleProperty(WINDOW_W);
+
+    public static DoubleProperty FX_WINDOW_HEIGHT_PROP = new SimpleDoubleProperty(750D);
     /**
      * Show edge prop.
      */
