@@ -68,6 +68,10 @@ public final class PropertiesFX {
      */
     public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
 
+    public static DoubleProperty FX_TILE_OFFSET_PROP = new SimpleDoubleProperty();
+
+
+
     /**
      * Show edge prop.
      */
@@ -77,4 +81,7 @@ public final class PropertiesFX {
     /** Mouse map grid y position.  */
     public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty();
 
+    static {
+        FX_SHOW_MAP_EDGE_PROP.addListener( iv -> FX_TILE_OFFSET_PROP.setValue( FX_SHOW_MAP_EDGE_PROP.get() ? FX_WIDTH_PROP.getValue() : 0D ) );
+    }
 }

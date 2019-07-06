@@ -17,16 +17,21 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
-
+import org.controlsfx.control.ToggleSwitch;
 
 
 /**
@@ -58,7 +63,9 @@ public final class MainPane extends Pane {
 
     private void createMainPane() {
 
-        DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty twProp = PropertiesFX.FX_WIDTH_PROP;
+        BooleanProperty edgeProp = PropertiesFX.FX_SHOW_MAP_EDGE_PROP;
+    edgeProp.setValue( true );
         // main pane
         mainPane = new BorderPane();
         mainPane.prefWidthProperty().bind( prefWidthProperty() );
@@ -81,26 +88,36 @@ public final class MainPane extends Pane {
 
         MaterialDesignIcon edgeIcon = MaterialDesignIcon.IMAGE_FILTER_NONE;
 
+        RoundLabel gysi = new RoundLabel();
 
 
+        //gysi.setFill( new Color( 0D,0D,0D,0D ) );
+        //gysi.setStroke( Color.grayRgb( 117 ) );
+        //gysi.setStrokeWidth( 1D );
 
         MaterialDesignIconView plus = new MaterialDesignIconView(plusIcon);
         MaterialDesignIconView mi = new MaterialDesignIconView(minusIcon);
         MaterialDesignIconView grid = new MaterialDesignIconView( gridIcon );
-    MaterialDesignIconView edge = new MaterialDesignIconView(edgeIcon);
+        MaterialDesignIconView edge = new MaterialDesignIconView(edgeIcon);
 
         plus.setGlyphSize( 29D );
         mi.setGlyphSize( 29D );
+        grid.setGlyphSize( 29D );
+        edge.setGlyphSize( 29D );
 
-        plus.setOnMouseClicked( me -> tw.setValue( tw.getValue() + 2D ) );
-        mi.setOnMouseClicked( me -> tw.setValue( tw.getValue() -2D ) );
+        plus.setOnMouseClicked( me -> twProp.setValue( twProp.getValue() + 2D ) );
+        mi.setOnMouseClicked( me -> twProp.setValue( twProp.getValue() -2D ) );
 
         Label tileSizeLab = new Label();
         tileSizeLab.setFont( Font.font(29D) );
 
-        tileSizeLab.textProperty().bind( tw.asString() );
+        tileSizeLab.textProperty().bind( twProp.asString() );
 
-        toolBar.getItems().setAll( grid,  plus, mi, tileSizeLab );
+        ToggleButton showEdgeTogB = new ToggleButton();
+        showEdgeTogB.setGraphic( edge );
+        showEdgeTogB.setSelected( true );
+        edgeProp.bind( showEdgeTogB.selectedProperty() );
+        toolBar.getItems().setAll( grid, gysi,showEdgeTogB, plus, mi, tileSizeLab );
 
         // TileProperties.setLength( 70D );
 

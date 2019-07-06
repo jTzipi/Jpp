@@ -16,6 +16,7 @@
 
 package earth.eu.jtzipi.jpp.ui.tile;
 
+
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.PropertiesFX;
@@ -68,9 +69,6 @@ public class Tile extends Region {
     //Pane baseP;
     //Pane aviP;
 
-    BooleanProperty fxEdgeWestProp = new SimpleBooleanProperty(this, "FX_EDGE_WEST", false );
-
-    BooleanProperty fxEdgeEastProp = new SimpleBooleanProperty(this, "FX_EDGE_EAST", false );
     /**
      * Neighbour tiles.
      */
@@ -105,14 +103,6 @@ public class Tile extends Region {
     }
 
 
-    Tile() {
-        this( PenAndPaperCell.ofEmpty( 0, 0, 0 ) );
-        // createTile();
-        draw();
-    }
-
-
-
     public static Tile of( final int x, final int y ) {
         if ( 0 > x || 0 > y ) {
 
@@ -139,10 +129,16 @@ public class Tile extends Region {
         //baseP = new Pane();
         //aviP = new Pane();
 
-        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP; // TileProperties.widthPropertyFX();
+        // tile width
+        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
+        // gap north
         final DoubleProperty gnorth = PropertiesFX.FX_GAP_EDGE_NORTH_PROP;
+        // gap west
         final DoubleProperty gwest = PropertiesFX.FX_GAP_EDGE_WEST_PROP;
+        // offset x and y
+        final DoubleProperty offset = PropertiesFX.FX_TILE_OFFSET_PROP;
 
+        System.out.println("Offset " + offset.getValue());
         prefWidthProperty().bind( tw );
         prefHeightProperty().bind( tw );
 
@@ -151,8 +147,8 @@ public class Tile extends Region {
         //baseP.prefHeightProperty().bind( prefHeightProperty() );
 
         // layout
-        NumberBinding layoutXBd = tw.multiply( ppc.getX() ).add( gwest );
-        NumberBinding layoutYBd = tw.multiply( ppc.getY() ).add( gnorth );
+        NumberBinding layoutXBd = tw.multiply( ppc.getX() ).add( gwest ).add( offset );
+        NumberBinding layoutYBd = tw.multiply( ppc.getY() ).add( gnorth ).add( offset );
 
         layoutXProperty().bind( layoutXBd );
         layoutYProperty().bind( layoutYBd );

@@ -110,7 +110,7 @@ public class MapPane extends Pane {
 
                 EdgeTile edge = EdgeTile.of( Position2D.W, j );
 
-                Tile tile = Tile.solid( i + 1, j + 1 );
+                Tile tile = Tile.solid( i, j );
 
                 getChildren().add( edge );
                 getChildren().add(tile);

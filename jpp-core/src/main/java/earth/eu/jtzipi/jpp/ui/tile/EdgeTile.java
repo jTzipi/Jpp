@@ -21,39 +21,43 @@ package earth.eu.jtzipi.jpp.ui.tile;
 import earth.eu.jtzipi.jpp.ui.PropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 
 
 public class EdgeTile extends Region {
 
-    Position2D p2D;
-    int idx;
+    Position2D p2D; // Position
+    int idx;        //
 
-    BooleanProperty fxVisibleProp = new SimpleBooleanProperty( this, "", false );
+    Shape pwn;  // path wall north
+    Shape pwe;  // path wall east
+    Shape pww;  // path wall west
+    Shape pws;  // path wall south
 
-    Shape pwn;
-    Shape pwe;
-    Shape pww;
-    Shape pws;
+    Text tt;    // tile text
 
-    BooleanBinding mouseOverBind;
+    BooleanBinding mouseOverBind;   // is mouse over a tile belonging to this
 
     /**
-     *
-     * @param position2D
-     * @param index
+     * Edge Tile.
+     * @param position2D position
+     * @param index index
      */
     EdgeTile(  final Position2D position2D, final int index ) {
         this.p2D = position2D;
         this.idx = index;
-
+        this.tt = new Text();
         init();
-        create();
+        if( PropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
+            draw();
+        }
     }
+
 
     public static EdgeTile of( Position2D pos2D, final int index )  {
 
@@ -61,39 +65,50 @@ public class EdgeTile extends Region {
     }
 
     private void init() {
-        DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty twProp = PropertiesFX.FX_WIDTH_PROP;
 
-        prefWidthProperty().bind( tw );
-        prefHeightProperty().bind( tw );
+        prefWidthProperty().bind( twProp );
+        prefHeightProperty().bind( twProp );
 
-        tw.addListener( iv -> create() );
-
+        twProp.addListener( iv -> update(  ) );
+        PropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
         BooleanBinding mouseOverBind = null;
+        NumberBinding yPosBind =prefHeightProperty().subtract( 12D );
+        // layout
+        // ------
+        // Caution: add + 1 because of corner edge
 
         switch ( p2D ) {
+            // east and west
             case E:
-            case W: layoutYProperty().bind( tw.multiply( idx + 1 ).add( PropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
-                mouseOverBind = PropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
+            case W: layoutYProperty().bind( twProp.multiply( idx + 1 ).add( PropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
+               mouseOverBind = PropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
             break;
+            // south and north
             case S:
-            case N: layoutXProperty().bind( tw.multiply( idx +1 ).add( PropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+            case N: layoutXProperty().bind( twProp.multiply( idx +1 ).add( PropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+
             mouseOverBind = PropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx +1);
             break;
         }
 
 
+        tt.setText( "" + (idx + 1) );
+        tt.xProperty().setValue( 10D );
+        tt.yProperty().bind( yPosBind );
     }
 
-    /**
-     *
-     * @return
-     */
-    public final BooleanProperty getVisiblePropFX() {
-        return fxVisibleProp;
+    private void update(  ) {
+        if( PropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
+            draw();
+        } else {
+            getChildren().setAll(  );
+        }
     }
 
-    private void create() {
+    private void draw() {
 
+        //TODO : kann statisch
         Wall w = Wall.solid();
         Wall we = Wall.empty();
 
