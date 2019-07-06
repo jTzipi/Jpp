@@ -17,10 +17,13 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
+import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
+import earth.eu.jtzipi.jpp.ui.map.PenAndPaperRealm;
+import earth.eu.jtzipi.jpp.ui.map.PenAndPaperSite;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Label;
@@ -32,6 +35,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import org.controlsfx.control.ToggleSwitch;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.reflect.generics.tree.Tree;
 
 
 /**
@@ -40,7 +47,7 @@ import org.controlsfx.control.ToggleSwitch;
  */
 public final class MainPane extends Pane {
 
-
+    private static final Logger LOG = LoggerFactory.getLogger( "MainPane" );
     private static final MainPane SINGLETON = new MainPane();
 
 
@@ -119,15 +126,27 @@ public final class MainPane extends Pane {
         edgeProp.bind( showEdgeTogB.selectedProperty() );
         toolBar.getItems().setAll( grid, gysi,showEdgeTogB, plus, mi, tileSizeLab );
 
+
+
         // TileProperties.setLength( 70D );
 
+        PenAndPaperRealm ppRealm = PenAndPaperRealm.of( "D&D" );
+        PenAndPaperSite pp = PenAndPaperSite.of( "Tzipi" );
+
+        ppRealm.addSite( pp );
+
+
+
         PenAndPaperLevelMap pplm = PenAndPaperLevelMap.of( 3, 4, 0, "Gysi" );
+
+        pp.addMap(pplm);
+
         MapPane mapP = new MapPane( pplm );
 
         mainPane.setCenter( mapP );
+        mainPane.setPrefSize( 500, 700 );
 
         mainPane.setTop( toolBar );
-
 
         // getChildren().setAll(  t1, t );
 

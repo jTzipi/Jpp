@@ -18,9 +18,12 @@
 package earth.eu.jtzipi.jpp.ui.map;
 
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Pan and Paper map.
@@ -29,7 +32,7 @@ import java.util.List;
  * </p>
  * @author jTzipi
  */
-public class PenAndPaperLevelMap {
+public class PenAndPaperLevelMap implements IPenAndPaperMap {
 
     /** name of map. */
     String name;
@@ -74,24 +77,48 @@ public class PenAndPaperLevelMap {
         return new PenAndPaperLevelMap( xDim, yDim, level, null == nameStr ? "TODO:RENAME" : nameStr );
     }
 
+    @Override
     public int getDimX() {
         return dimX;
     }
+    @Override
     public int getDimY() {
         return dimY;
     }
 
     private void init() {
-        
+
     }
 
-    public void addTile( int x, int y, IPenAndPaperCell tile ) {
-        if( 0 > x || 0 > y || x >= dimX || y >= dimY ) {
-            throw new IllegalArgumentException("lx/ly must >= 0 and < dimX/dimY! Your lx/ly = ");
+    public String getDescription() {
+        return desc;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
+    @Override
+    public IPenAndPaperCell getCell( int x, int y ) {
+
+        if( x < 0 || map.size() <= x ) {
+
+        }
+        if( y < 0 || map.get( 0 ).size() <= y) {
+
         }
 
-        // lazy create new ArrayList
+        return map.get(x).get(y);
+    }
 
-
+    @Override
+    public List<IPenAndPaperCell> getCells() {
+        return map.stream().flatMap( list -> list.stream() ).collect( toList() );
     }
 }
