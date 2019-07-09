@@ -1,6 +1,23 @@
+/*
+ *    Copyright 2019 (c) Tim Langhammer
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ */
+
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
-import earth.eu.jtzipi.jpp.ui.PropertiesFX;
+import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -27,9 +44,9 @@ public class Wall  {
     // Flip
     private static final Rotate ROTATE_180_DEGREE = new Rotate( 180D );
     // Translate south
-    private static final Translate TLATE_SOUTH = new Translate( 0D, PropertiesFX.FX_WIDTH_PROP.doubleValue() );
+    private static final Translate TLATE_SOUTH = new Translate( 0D, MapPropertiesFX.FX_WIDTH_PROP.doubleValue() );
     // Translate east
-    private static final Translate TLATE_EAST = new Translate( PropertiesFX.FX_WIDTH_PROP.doubleValue(), 0D);
+    private static final Translate TLATE_EAST = new Translate( MapPropertiesFX.FX_WIDTH_PROP.doubleValue(), 0D);
 
 
     static {
@@ -37,7 +54,7 @@ public class Wall  {
          * Bind everything to tiles width.
          */
 
-        DoubleProperty widthProp = PropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty widthProp = MapPropertiesFX.FX_WIDTH_PROP;
         ROTATE_180_DEGREE.pivotXProperty().bind( widthProp.divide( 2D ) );
         TLATE_SOUTH.yProperty().bind( widthProp );
         TLATE_EAST.xProperty().bind( widthProp );
@@ -188,8 +205,8 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = PropertiesFX.FX_WIDTH_PROP.doubleValue();
-                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double w = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();
 
@@ -208,11 +225,11 @@ public class Wall  {
             public Shape createPath() {
                 //return new Path(  );
 
-                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
-                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
-                double door = PropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
+                double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
+                double door = MapPropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
 
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0D ).lx( gysi ).build();
@@ -232,11 +249,11 @@ public class Wall  {
 
 
 
-                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
-                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
-                double door = PropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
+                double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
+                double door = MapPropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
 
 
                 return   PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build()             ;
@@ -272,10 +289,10 @@ public class Wall  {
 
 
                 //double ws = width * SEGMENT_WIDTH;
-                double gysi = PropertiesFX.FX_WIDTH_PROP.doubleValue();
-                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
-                double near = PropertiesFX.SEGMENT_LEN.doubleValue();
+                double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
 
 
                 return PathBuilder.create().strokeWidth( ws ).lx( near ).mx( gysi - near ).lx( gysi ).build();
@@ -305,8 +322,8 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = PropertiesFX.FX_WIDTH_PROP.doubleValue();
-                double ws = PropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double w = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();
 

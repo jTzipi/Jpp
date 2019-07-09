@@ -14,40 +14,40 @@
  *    limitations under the License.
  *
  */
-package earth.eu.jtzipi.jpp.map;
 
-import java.util.List;
+package earth.eu.jtzipi.jpp.ui.tree;
 
+import javafx.scene.Node;
 
 /**
- * Pen and Paper Site.
- * <p>
- *     A site contains one or more maps.;
- * </p>
+ * Tree Info.
+ *
+ * @author jTzipi
  */
-public interface IPenAndPaperSite {
+public interface ITreeNodeInfo {
+
 
     /**
-     * Name of site.
-     * @return name
+     * Node text.
+     * @return
      */
-    String getName();
+    String getText();
 
     /**
-     * Return all maps.
-     * @return maps
+     * Node tooltip.
+     * @return
      */
-    List<IPenAndPaperMap> getLevelMaps();
-
-    /**
-     * Add a map to site.
-     * @param map map
-     */
-    void addMap( IPenAndPaperMap map );
+    String getDescription();
 
     /**
      *
-     * @param map
+     * @return
      */
-    void removeMap( IPenAndPaperMap map );
+    Node getGraphic();
+
+    /**
+     * Is this node a leaf.
+     * @return
+     */
+    boolean isLeaf();
 }

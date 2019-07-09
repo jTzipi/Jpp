@@ -17,6 +17,7 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -54,6 +55,7 @@ public class RoundLabel extends Label {
         setBorder( new Border(bs));
 
         setPrefSize( 57,57 );
+        setAlignment( Pos.CENTER );
         setText( "Gysi" );
     }
 }

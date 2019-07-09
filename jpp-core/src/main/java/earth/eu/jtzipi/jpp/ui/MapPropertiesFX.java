@@ -19,16 +19,17 @@ package earth.eu.jtzipi.jpp.ui;
 
 
 import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 
 /**
  * Global Properties.
  */
-public final class PropertiesFX {
+public final class MapPropertiesFX {
 
     /** Forbid Instance. */
-    private PropertiesFX() {
+    private MapPropertiesFX() {
         //
     }
 
@@ -68,20 +69,29 @@ public final class PropertiesFX {
      */
     public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
 
-    public static DoubleProperty FX_TILE_OFFSET_PROP = new SimpleDoubleProperty();
+    public static DoubleBinding FX_TILE_OFFSET_BIND;
 
 
 
     /**
      * Show edge prop.
      */
-    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty();
+    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty(true);
     /** Mouse map grid x position.  */
     public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty();
     /** Mouse map grid y position.  */
     public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty();
 
     static {
-        FX_SHOW_MAP_EDGE_PROP.addListener( iv -> FX_TILE_OFFSET_PROP.setValue( FX_SHOW_MAP_EDGE_PROP.get() ? FX_WIDTH_PROP.getValue() : 0D ) );
+        FX_TILE_OFFSET_BIND  = new DoubleBinding() {
+            @Override
+            protected double computeValue() {
+                return FX_SHOW_MAP_EDGE_PROP.get() ? FX_WIDTH_PROP.doubleValue() : 0D;
+            }
+        };
+        FX_WIDTH_PROP.addListener( (iv) -> FX_TILE_OFFSET_BIND.invalidate() );
     }
+
+
+
 }

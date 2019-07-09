@@ -34,5 +34,6 @@ public interface IPenAndPaperRealm {
     String getDescription();
 
     List<IPenAndPaperSite> getSites();
-
+    void addSite(IPenAndPaperSite penAndPaperSite);
+    void removeSite(IPenAndPaperSite penAndPaperSite);
 }

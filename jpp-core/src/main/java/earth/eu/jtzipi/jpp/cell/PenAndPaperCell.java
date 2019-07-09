@@ -54,7 +54,11 @@ public class PenAndPaperCell implements IPenAndPaperCell {
     private PenAndPaperCell( final int cX,
                              final int cY,
                              final int level,
-                             final long idWallNorth,final long idWalleast,final long idWallWest,final long idWallSouth, long idFloor, Set<Tag> tagSet ) {
+                             final long idWallNorth,
+                             final long idWalleast,
+                             final long idWallWest,
+                             final long idWallSouth,
+                             long idFloor, Set<Tag> tagSet ) {
         this.x = cX;
         this.y = cY;
         this.level = level;
@@ -72,6 +76,7 @@ public class PenAndPaperCell implements IPenAndPaperCell {
      * @param cY y
      * @param level level
      * @return empty ppc
+     * @throws IllegalArgumentException
      */
     public static PenAndPaperCell ofEmpty( final int cX, final int cY, final int level ) {
         if( 0 > cX || 0 > cY ) {
@@ -82,6 +87,32 @@ public class PenAndPaperCell implements IPenAndPaperCell {
         return new PenAndPaperCell( cX, cY, level, id, id, id, id, id, null );
     }
 
+    /**
+     * Return a tile with all wall solid.
+     * @param cX
+     * @param cY
+     * @param level
+     * @return
+     */
+    public static PenAndPaperCell ofSolid( final int cX, final int cY, final int level ) {
+        long id = Wall.WallSegments.SOLID.getId();
+
+        return new PenAndPaperCell( cX, cY, level, id, id, id, id, id, null );
+    }
+
+    /**
+     *
+     * @param cX
+     * @param cY
+     * @param level
+     * @param idWN
+     * @param idWE
+     * @param idWW
+     * @param idWS
+     * @param idF
+     * @param tagSet
+     * @return
+     */
     public static PenAndPaperCell of( final int cX, final int cY, final int level, long idWN, long idWE, long idWW, long idWS, long idF, Set<Tag> tagSet ) {
         return new PenAndPaperCell( cX, cY, level, idWN, idWE, idWW, idWS, idF, tagSet );
     }
@@ -136,17 +167,17 @@ public class PenAndPaperCell implements IPenAndPaperCell {
 
     @Override
     public long getIdWallNorth() {
-        return 0;
+        return idWN;
     }
 
     @Override
     public long getIdWallEast() {
-        return 0;
+        return idWE;
     }
 
     @Override
     public long getIdWallWest() {
-        return 0;
+        return idWW;
     }
 
     @Override

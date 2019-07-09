@@ -1,5 +1,5 @@
 /*
- *    Copyright (c) 2019 Tim Langhammer
+ *    Copyright 2019 (c) Tim Langhammer
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
+ *
  */
 
 package earth.eu.jtzipi.jpp.ui.tile;
@@ -19,12 +20,11 @@ package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
-import earth.eu.jtzipi.jpp.ui.PropertiesFX;
+import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
@@ -60,10 +60,7 @@ public class Tile extends Region {
      * Segments .
      */
     /** East Wall.*/
-    Wall eW;
-    Wall wW;
-    Wall sW;
-    Wall nW;
+
 
     final IPenAndPaperCell ppc;
     //Pane baseP;
@@ -85,11 +82,8 @@ public class Tile extends Region {
     Tile( IPenAndPaperCell ppc ) {
         this.ppc = ppc;
         //this.y = y;
-        //this.level = level;
-        this.eW = Wall.ofId( ppc.getIdWallEast() );
-        this.sW = Wall.ofId( ppc.getIdWallSouth() );
-        this.nW = Wall.ofId( ppc.getIdWallNorth() );
-        this.wW = Wall.ofId( ppc.getIdWallWest()); // Maup;
+
+         // Maup;
         // init code
         create();   // create all parts
         draw();     // draw
@@ -118,7 +112,7 @@ public class Tile extends Region {
 
 
 
-        return new Tile( PenAndPaperCell.ofEmpty( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
+        return new Tile( PenAndPaperCell.ofSolid( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
     }
 
 
@@ -130,15 +124,12 @@ public class Tile extends Region {
         //aviP = new Pane();
 
         // tile width
-        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
-        // gap north
-        final DoubleProperty gnorth = PropertiesFX.FX_GAP_EDGE_NORTH_PROP;
-        // gap west
-        final DoubleProperty gwest = PropertiesFX.FX_GAP_EDGE_WEST_PROP;
-        // offset x and y
-        final DoubleProperty offset = PropertiesFX.FX_TILE_OFFSET_PROP;
+        final DoubleProperty tw = MapPropertiesFX.FX_WIDTH_PROP;
 
-        System.out.println("Offset " + offset.getValue());
+        // offset x and y
+
+
+        //System.out.println("Offset " + offset.getValue());
         prefWidthProperty().bind( tw );
         prefHeightProperty().bind( tw );
 
@@ -147,13 +138,16 @@ public class Tile extends Region {
         //baseP.prefHeightProperty().bind( prefHeightProperty() );
 
         // layout
-        NumberBinding layoutXBd = tw.multiply( ppc.getX() ).add( gwest ).add( offset );
-        NumberBinding layoutYBd = tw.multiply( ppc.getY() ).add( gnorth ).add( offset );
+         NumberBinding layoutX = tw.multiply( ppc.getX() ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
+         NumberBinding layoutY = tw.multiply( ppc.getY() ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
 
-        layoutXProperty().bind( layoutXBd );
-        layoutYProperty().bind( layoutYBd );
+
+        layoutXProperty().bind( layoutX );
+        layoutYProperty().bind( layoutY );
 
         tw.addListener( obs -> {
+            layoutX.invalidate();
+            layoutY.invalidate();
             draw();
         } );
 
@@ -174,14 +168,14 @@ public class Tile extends Region {
         //setBackground( new Background( new BackgroundFill( Color.TEAL, null, null ) ) );
 
 
-        System.out.println( "Width :" + getWidth() );
-        System.out.println( "Height :" +getHeight() );
-        System.out.println( "PH :" + getPrefHeight() );
-        System.out.println( "PW :" + getPrefWidth() );
-        System.out.println( "W :" + PropertiesFX.SEGMENT_WIDTH.doubleValue() );
-
-        System.out.println( "width :" + PropertiesFX.SEGMENT_LEN.doubleValue() );
-        System.out.println( "GADI" );
+//        System.out.println( "Width :" + getWidth() );
+//        System.out.println( "Height :" +getHeight() );
+//        System.out.println( "PH :" + getPrefHeight() );
+//        System.out.println( "PW :" + getPrefWidth() );
+//        System.out.println( "W :" + MapPropertiesFX.SEGMENT_WIDTH.doubleValue() );
+//
+        System.out.println( "width :" + layoutXProperty().getValue() + " " + layoutYProperty().getValue() );
+         System.out.println( "GADI " );
 
         createAviPane();
     }
@@ -208,10 +202,17 @@ public class Tile extends Region {
 
         List<Shape> segL = new ArrayList<>();
 
-        segL.add( eW.toPath( E ) );
-        segL.add( sW.toPath( S ) );
-        segL.add( nW.toPath( N ) );
-        segL.add( wW.toPath( W ) );
+        Shape wW = Wall.ofId( ppc.getIdWallWest() ).toPath( W );
+        Shape eW = Wall.ofId( ppc.getIdWallEast() ).toPath( E );
+        Shape sW = Wall.ofId( ppc.getIdWallSouth() ).toPath( S );
+        Shape nW = Wall.ofId( ppc.getIdWallNorth() ).toPath( N );
+
+        // System.out.println( "Shape " + wW + " " + eW );
+
+        segL.add( eW );
+        segL.add( sW );
+        segL.add( nW );
+        segL.add( wW );
 
         Text tt = new Text();
 

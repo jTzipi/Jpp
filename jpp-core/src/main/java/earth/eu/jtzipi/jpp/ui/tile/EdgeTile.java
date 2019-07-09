@@ -18,11 +18,10 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 
-import earth.eu.jtzipi.jpp.ui.PropertiesFX;
+import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Shape;
@@ -53,7 +52,7 @@ public class EdgeTile extends Region {
         this.idx = index;
         this.tt = new Text();
         init();
-        if( PropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
+        if( MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
             draw();
         }
     }
@@ -65,13 +64,13 @@ public class EdgeTile extends Region {
     }
 
     private void init() {
-        DoubleProperty twProp = PropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty twProp = MapPropertiesFX.FX_WIDTH_PROP;
 
         prefWidthProperty().bind( twProp );
         prefHeightProperty().bind( twProp );
 
         twProp.addListener( iv -> update(  ) );
-        PropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
+        MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
         BooleanBinding mouseOverBind = null;
         NumberBinding yPosBind =prefHeightProperty().subtract( 12D );
         // layout
@@ -81,14 +80,14 @@ public class EdgeTile extends Region {
         switch ( p2D ) {
             // east and west
             case E:
-            case W: layoutYProperty().bind( twProp.multiply( idx + 1 ).add( PropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
-               mouseOverBind = PropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
+            case W: layoutYProperty().bind( twProp.multiply( idx + 1 ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
+               mouseOverBind = MapPropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
             break;
             // south and north
             case S:
-            case N: layoutXProperty().bind( twProp.multiply( idx +1 ).add( PropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+            case N: layoutXProperty().bind( twProp.multiply( idx +1 ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
 
-            mouseOverBind = PropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx +1);
+            mouseOverBind = MapPropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx +1);
             break;
         }
 
@@ -99,7 +98,7 @@ public class EdgeTile extends Region {
     }
 
     private void update(  ) {
-        if( PropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
+        if( MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.get() ) {
             draw();
         } else {
             getChildren().setAll(  );
@@ -129,6 +128,6 @@ public class EdgeTile extends Region {
                  pws = w.toPath( Position2D.S );break;
         }
 
-        getChildren().setAll( pwe, pww, pws, pwn );
+        getChildren().setAll( pwe, pww, pws, pwn, tt );
     }
 }

@@ -18,50 +18,39 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
+import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Pane;
+
+import java.util.Map;
 
 /**
  * Pane for displaying a single map.
  */
 public class MapPane extends Pane {
 
-    /** Show north edge. */
-    BooleanProperty fxShowN_EdgeProp = new SimpleBooleanProperty( this, "FX_SHOW_NORTH_EDGE_PROP", false );
-    /** Show east edge. */
-    BooleanProperty fxShowE_EdgeProp = new SimpleBooleanProperty( this, "FX_SHOW_NORTH_EDGE_PROP", false );
-
-    /** rows of map. */
-    int row;
-    /** cols of map .*/
-    int column;
     /** map .*/
     // Pane tileP;
-    /** content of map. */
-    PenAndPaperLevelMap pplm;
+    /**
+     * content of map.
+     */
+    IPenAndPaperMap pplm;
 
-
-    DoubleBinding fxTopGapBinding;
-
-    DoubleBinding fxLeftGapBinding;
 
     DoubleBinding fxWidthBinding;
 
     DoubleBinding fxHeightBinding;
 
-
     /**
      * MapPanel.
      *
+     * @param penAndPaperLevelMap map to draw
      */
-     MapPane( PenAndPaperLevelMap penAndPaperLevelMap ) {
+    MapPane( IPenAndPaperMap penAndPaperLevelMap ) {
         this.pplm = penAndPaperLevelMap;
 
         init();
@@ -69,56 +58,49 @@ public class MapPane extends Pane {
     }
 
 
-
-
     private void init() {
-
-        final DoubleProperty tw = PropertiesFX.FX_WIDTH_PROP;
+        final DoubleBinding offset = MapPropertiesFX.FX_TILE_OFFSET_BIND;
+        final DoubleProperty gapNorth = MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP;
+        final DoubleProperty gapLeft = MapPropertiesFX.FX_GAP_EDGE_WEST_PROP;
+        final DoubleProperty tw = MapPropertiesFX.FX_WIDTH_PROP;
         // set half of tile width gap
-        fxLeftGapBinding = tw.multiply( 0.5D );
-        fxTopGapBinding = tw.multiply( 0.5D );
+        //fxLeftGapBinding = tw.multiply( 0.5D );
+        //fxTopGapBinding = tw.multiply( 0.5D );
 
-        // width = rows * tile size + left gap
-        fxWidthBinding = tw.multiply( row ).add( fxLeftGapBinding.doubleValue() );
-        // height = rows * tile size + top gap
-        fxHeightBinding = tw.multiply( column ).add( fxTopGapBinding.doubleValue() );
+        // width = rows * tile size + offset + left gap
+        fxWidthBinding = tw.multiply( pplm.getDimX() ).add( offset ).add( gapNorth );
+        // height = rows * tile size + offset + top gap
+        fxHeightBinding = tw.multiply( pplm.getDimY() ).add( offset ).add( gapLeft );
         // bind width and height
         prefHeightProperty().bind( fxHeightBinding );
         prefWidthProperty().bind( fxWidthBinding );
 
-
+        System.out.println( "Pref W/H " + fxWidthBinding.get() + " . " + fxHeightBinding.get() );
     }
-
 
 
     private void createMapPane() {
         // new tile pane
 
-
-        // test
-        // IntStream.range(0, 100).mapToObj(  )
-
-        boolean ee = fxShowE_EdgeProp.getValue();
-        boolean en = fxShowN_EdgeProp.getValue();
-
-        // rows
-        for( int i = 0; i < pplm.getDimX(); i++ ) {
+        // all tile dim x
+        for ( int i = 0; i < pplm.getDimX(); i++ ) {
 
             getChildren().add( EdgeTile.of( Position2D.N, i ) );
 
-            for( int j = 0; j < pplm.getDimY(); j++ ) {
+            // all tile dim y
+            for ( int j = 0; j < pplm.getDimY(); j++ ) {
+                if( j == i ) {
+                    EdgeTile edge = EdgeTile.of( Position2D.W, j );
+                    getChildren().add( edge );
 
-                EdgeTile edge = EdgeTile.of( Position2D.W, j );
-
+                }
                 Tile tile = Tile.solid( i, j );
 
-                getChildren().add( edge );
-                getChildren().add(tile);
+
+                getChildren().add( tile );
             }
+
         }
-
-
-
 
     }
 

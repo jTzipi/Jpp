@@ -20,48 +20,58 @@ package earth.eu.jtzipi.jpp.ui;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
+import earth.eu.jtzipi.jpp.map.IPenAndPaperRealm;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
+import earth.eu.jtzipi.jpp.map.MapToTree;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperRealm;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperSite;
+import earth.eu.jtzipi.jpp.ui.tree.ITreeNodeInfo;
+import earth.eu.jtzipi.jpp.ui.tree.TreeNodeInfoCell;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToolBar;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
-import org.controlsfx.control.ToggleSwitch;
-import javafx.stage.Stage;
+import javafx.util.Callback;
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.tree.Tree;
 
 
 /**
  * Main panel.
+ *
  * @author jTzipi
  */
 public final class MainPane extends Pane {
 
     private static final Logger LOG = LoggerFactory.getLogger( "MainPane" );
+
+    /**
+     * Single main pane instance.
+     */
     private static final MainPane SINGLETON = new MainPane();
 
 
-
+    private IPenAndPaperRealm ppRealm;
+    // main pane
     private BorderPane mainPane;
+
+
     /**
      * MainPane.
      */
     private MainPane() {
-    createMainPane();
+        createMainPane();
     }
 
     /**
      * Single instance of main pane.
+     *
      * @return main pane
      */
     public static MainPane create() {
@@ -70,29 +80,75 @@ public final class MainPane extends Pane {
 
     private void createMainPane() {
 
-        DoubleProperty twProp = PropertiesFX.FX_WIDTH_PROP;
-        BooleanProperty edgeProp = PropertiesFX.FX_SHOW_MAP_EDGE_PROP;
-    edgeProp.setValue( true );
+
+        // TileProperties.setLength( 70D );
+
+        ppRealm = PenAndPaperRealm.of( "D&D" );
+        IPenAndPaperSite pp = PenAndPaperSite.of( "Tzipi" );
+        ppRealm.addSite( pp );
+
+        IPenAndPaperMap pplm = PenAndPaperLevelMap.of( 10, 7, 0, "Gysi" );
+
+        pp.addMap( pplm );
+
+        MapPane mapP = new MapPane( pplm );
+
+
+        ToolBar toolBar = createMainToolbar();
+        toolBar.prefWidthProperty().bind( prefWidthProperty() );
+
+        TreeView<ITreeNodeInfo> ppRealmTree = new TreeView<>();
+        ppRealmTree.setCellFactory( new Callback<TreeView<ITreeNodeInfo>, TreeCell<ITreeNodeInfo>>() {
+            @Override
+            public TreeCell<ITreeNodeInfo> call( TreeView<ITreeNodeInfo> iTreeNodeInfoTreeView ) {
+                return new TreeNodeInfoCell();
+            }
+        } );
+
+        TreeItem<ITreeNodeInfo> root = createRealmTreeRoot();
+
+        ppRealmTree.setRoot( root );
+
+
+        ScrollPane mapSPane = new ScrollPane(mapP);
+        mapSPane.setPrefSize( 600, 700 );
+
+
+
+        StatusBar statusBar = new StatusBar();
+
+
+
         // main pane
         mainPane = new BorderPane();
-        mainPane.prefWidthProperty().bind( prefWidthProperty() );
-        //tileLenSpin = new Spinner<>( TileProperties.MIN_LEN_TILE, TileProperties.MAX_LEN_TILE, TileProperties.PREF_LEN_TILE );
+        //mainPane.setPrefSize( 700D, 700D );
+        mainPane.prefWidthProperty().bind( PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D  ) );
+        mainPane.setCenter( mapSPane );
+        mainPane.setTop( toolBar );
+        //mainPane.setLeft( ppRealmTree );
 
-        //tileLenSl.setMajorTickUnit( 10D );
 
-        //TileProperties.widthPropertyFX().bind( tileLenSpin.valueProperty() );
+        // getChildren().setAll(  t1, t );
 
-        //
-        ToolBar toolBar = new ToolBar(  );
+        getChildren().setAll( mainPane );
+    }
+
+    private ToolBar createMainToolbar() {
+        // north tool bar
+        ToolBar toolBar = new ToolBar();
+
+
+        DoubleProperty twProp = MapPropertiesFX.FX_WIDTH_PROP;
+        BooleanProperty edgeProp = MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP;
 
         // increase grid size
         MaterialDesignIcon plusIcon = MaterialDesignIcon.PLUS_CIRCLE_OUTLINE;
         // decrease grid size
         MaterialDesignIcon minusIcon = MaterialDesignIcon.MINUS_CIRCLE_OUTLINE;
-        // show edge
 
+        // show grid
         MaterialDesignIcon gridIcon = MaterialDesignIcon.GRID;
-
+        // show edge
         MaterialDesignIcon edgeIcon = MaterialDesignIcon.IMAGE_FILTER_NONE;
 
         RoundLabel gysi = new RoundLabel();
@@ -102,10 +158,10 @@ public final class MainPane extends Pane {
         //gysi.setStroke( Color.grayRgb( 117 ) );
         //gysi.setStrokeWidth( 1D );
 
-        MaterialDesignIconView plus = new MaterialDesignIconView(plusIcon);
-        MaterialDesignIconView mi = new MaterialDesignIconView(minusIcon);
+        MaterialDesignIconView plus = new MaterialDesignIconView( plusIcon );
+        MaterialDesignIconView mi = new MaterialDesignIconView( minusIcon );
         MaterialDesignIconView grid = new MaterialDesignIconView( gridIcon );
-        MaterialDesignIconView edge = new MaterialDesignIconView(edgeIcon);
+        MaterialDesignIconView edge = new MaterialDesignIconView( edgeIcon );
 
         plus.setGlyphSize( 29D );
         mi.setGlyphSize( 29D );
@@ -113,10 +169,13 @@ public final class MainPane extends Pane {
         edge.setGlyphSize( 29D );
 
         plus.setOnMouseClicked( me -> twProp.setValue( twProp.getValue() + 2D ) );
-        mi.setOnMouseClicked( me -> twProp.setValue( twProp.getValue() -2D ) );
+        mi.setOnMouseClicked( me -> twProp.setValue( twProp.getValue() - 2D ) );
+
+        RoundLabel plusRLabel = new RoundLabel();
+        plusRLabel.setGraphic( plus );
 
         Label tileSizeLab = new Label();
-        tileSizeLab.setFont( Font.font(29D) );
+        tileSizeLab.setFont( Font.font( 29D ) );
 
         tileSizeLab.textProperty().bind( twProp.asString() );
 
@@ -124,32 +183,29 @@ public final class MainPane extends Pane {
         showEdgeTogB.setGraphic( edge );
         showEdgeTogB.setSelected( true );
         edgeProp.bind( showEdgeTogB.selectedProperty() );
-        toolBar.getItems().setAll( grid, gysi,showEdgeTogB, plus, mi, tileSizeLab );
+        toolBar.getItems().setAll( grid, gysi, showEdgeTogB, plusRLabel, mi, tileSizeLab );
 
 
 
-        // TileProperties.setLength( 70D );
+        return toolBar;
+    }
 
-        PenAndPaperRealm ppRealm = PenAndPaperRealm.of( "D&D" );
-        PenAndPaperSite pp = PenAndPaperSite.of( "Tzipi" );
+    private TreeItem<ITreeNodeInfo> createRealmTreeRoot() {
 
-        ppRealm.addSite( pp );
+        TreeItem<ITreeNodeInfo> root = new TreeItem<>(MapToTree.realmToInfo( ppRealm ));
 
+        for( IPenAndPaperSite site : ppRealm.getSites() ) {
 
+            TreeItem<ITreeNodeInfo> siteItem = new TreeItem<>( MapToTree.siteToInfo( site ) );
+            root.getChildren().add( siteItem );
+            // Add all maps
+            for( IPenAndPaperMap map : site.getLevelMaps() ){
 
-        PenAndPaperLevelMap pplm = PenAndPaperLevelMap.of( 3, 4, 0, "Gysi" );
+                siteItem.getChildren().add( new TreeItem<>( MapToTree.mapToInfo( map ) ) );
 
-        pp.addMap(pplm);
+            }
+        }
 
-        MapPane mapP = new MapPane( pplm );
-
-        mainPane.setCenter( mapP );
-        mainPane.setPrefSize( 500, 700 );
-
-        mainPane.setTop( toolBar );
-
-        // getChildren().setAll(  t1, t );
-
-        getChildren().setAll( mainPane );
+        return root;
     }
 }
