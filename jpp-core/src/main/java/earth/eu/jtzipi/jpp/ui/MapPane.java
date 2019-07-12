@@ -26,7 +26,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Pane;
 
-import java.util.Map;
+
 
 /**
  * Pane for displaying a single map.
@@ -80,20 +80,27 @@ public class MapPane extends Pane {
 
 
     private void createMapPane() {
-        // new tile pane
 
+
+        for ( int i = 0; i < pplm.getDimX(); i++ ) {
+            getChildren().add( EdgeTile.of( Position2D.N, i ) );
+        }
+
+        for ( int iy = 0; iy < pplm.getDimY(); iy++ ) {
+            getChildren().add( EdgeTile.of( Position2D.W, iy ) );
+        }
         // all tile dim x
         for ( int i = 0; i < pplm.getDimX(); i++ ) {
 
-            getChildren().add( EdgeTile.of( Position2D.N, i ) );
-
             // all tile dim y
             for ( int j = 0; j < pplm.getDimY(); j++ ) {
-                if( j == i ) {
-                    EdgeTile edge = EdgeTile.of( Position2D.W, j );
-                    getChildren().add( edge );
-
-                }
+//                // add edge west
+//                if( j == i ) {
+//                    EdgeTile edge = EdgeTile.of( Position2D.W, j );
+//                    getChildren().add( edge );
+//
+//                }
+                // new tile pane
                 Tile tile = Tile.solid( i, j );
 
 

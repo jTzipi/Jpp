@@ -29,11 +29,28 @@ public interface IPenAndPaperRealm {
 
     /**
      * Desc.
-     * @return
+     * @return desc
      */
     String getDescription();
 
+    /**
+     * All sites of this realm.
+     *
+     * @return list of sites
+     */
     List<IPenAndPaperSite> getSites();
-    void addSite(IPenAndPaperSite penAndPaperSite);
-    void removeSite(IPenAndPaperSite penAndPaperSite);
+
+    /**
+     * Add a new site.
+     *
+     * @param penAndPaperSite site
+     */
+    void addSite( IPenAndPaperSite penAndPaperSite );
+
+    /**
+     * Remove a site.
+     *
+     * @param penAndPaperSite site
+     */
+    void removeSite( IPenAndPaperSite penAndPaperSite );
 }

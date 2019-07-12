@@ -23,7 +23,12 @@ import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
@@ -31,7 +36,7 @@ import javafx.scene.text.Text;
 public class EdgeTile extends Region {
 
     Position2D p2D; // Position
-    int idx;        //
+    int idx;        // index of this edge
 
     Shape pwn;  // path wall north
     Shape pwe;  // path wall east
@@ -40,8 +45,8 @@ public class EdgeTile extends Region {
 
     Text tt;    // tile text
 
-    BooleanBinding mouseOverBind;   // is mouse over a tile belonging to this
-
+    BooleanBinding mouseXOverBind;   // is mouse over a north/south tile belonging to this
+    BooleanBinding mouseYOverBind;   // is mouse over a west/east tile
     /**
      * Edge Tile.
      * @param position2D position
@@ -57,7 +62,6 @@ public class EdgeTile extends Region {
         }
     }
 
-
     public static EdgeTile of( Position2D pos2D, final int index )  {
 
         return new EdgeTile( pos2D, index );
@@ -71,7 +75,7 @@ public class EdgeTile extends Region {
 
         twProp.addListener( iv -> update(  ) );
         MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
-        BooleanBinding mouseOverBind = null;
+
         NumberBinding yPosBind =prefHeightProperty().subtract( 12D );
         // layout
         // ------
@@ -80,15 +84,20 @@ public class EdgeTile extends Region {
         switch ( p2D ) {
             // east and west
             case E:
-            case W: layoutYProperty().bind( twProp.multiply( idx + 1 ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
-               mouseOverBind = MapPropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx + 1 );
+            case W:
+                layoutYProperty().bind( twProp.multiply( idx + 1 ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+                mouseYOverBind = MapPropertiesFX.FX_MOUSE_Y_PROP.isEqualTo( idx );
+                mouseYOverBind.addListener( ( obs, oldVal, newVal ) -> onMouse( newVal ) );
             break;
             // south and north
             case S:
-            case N: layoutXProperty().bind( twProp.multiply( idx +1 ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ) );
+            case N:
+                layoutXProperty().bind( twProp.multiply( idx + 1 ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ) );
 
-            mouseOverBind = MapPropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx +1);
+                mouseXOverBind = MapPropertiesFX.FX_MOUSE_X_PROP.isEqualTo( idx );
+                mouseXOverBind.addListener( ( obs, oldVal, newVal ) -> onMouse( newVal ) );
             break;
+
         }
 
 
@@ -104,6 +113,22 @@ public class EdgeTile extends Region {
             getChildren().setAll(  );
         }
     }
+
+    /**
+     * If mouse is over a tile of this edge paint .
+     *
+     * @param over mouse is over a tile of this edge
+     */
+    private void onMouse( boolean over ) {
+        // if mouse over a cell of this edge
+        if ( over ) {
+            setBackground( new Background( new BackgroundFill( Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY ) ) );
+        } else {
+            setBackground( Background.EMPTY );
+        }
+    }
+
+    
 
     private void draw() {
 
@@ -127,6 +152,7 @@ public class EdgeTile extends Region {
                  pww = w.toPath( Position2D.W );
                  pws = w.toPath( Position2D.S );break;
         }
+
 
         getChildren().setAll( pwe, pww, pws, pwn, tt );
     }

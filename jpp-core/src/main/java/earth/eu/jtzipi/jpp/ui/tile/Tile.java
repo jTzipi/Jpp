@@ -22,7 +22,6 @@ import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Region;
@@ -138,24 +137,34 @@ public class Tile extends Region {
         //baseP.prefHeightProperty().bind( prefHeightProperty() );
 
         // layout
-         NumberBinding layoutX = tw.multiply( ppc.getX() ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
-         NumberBinding layoutY = tw.multiply( ppc.getY() ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
+        NumberBinding layoutX = tw.multiply( ppc.getX() ).add( MapPropertiesFX.FX_GAP_EDGE_WEST_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
+        NumberBinding layoutY = tw.multiply( ppc.getY() ).add( MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP ).add( MapPropertiesFX.FX_TILE_OFFSET_BIND );
 
 
         layoutXProperty().bind( layoutX );
         layoutYProperty().bind( layoutY );
 
         tw.addListener( obs -> {
-            layoutX.invalidate();
-            layoutY.invalidate();
+
             draw();
         } );
 
-        setOnMouseEntered( me -> System.out.println("tile go")  ); // me -> aviP.setVisible( true )
-        setOnMouseExited( me -> System.out.println( "tile off" ) );
+        setOnMouseEntered( me -> onMouseEntered() ); // me -> aviP.setVisible( true )
+        setOnMouseExited( me -> onMouseOff() );
 
         //getChildren().addAll( baseP, aviP );
 
+    }
+
+    private void onMouseEntered() {
+        MapPropertiesFX.FX_MOUSE_X_PROP.setValue( ppc.getX() );
+        MapPropertiesFX.FX_MOUSE_Y_PROP.setValue( ppc.getY() );
+        System.out.println( "tile on " + ppc.getX() + " " + ppc.getY() );
+    }
+
+    private void onMouseOff() {
+        //MapPropertiesFX.FX_MOUSE_Y_PROP.setValue( ppc.getY() );
+        System.out.println( "tile off " + ppc.getX() + " " + ppc.getY() );
     }
 
     private void draw() {
