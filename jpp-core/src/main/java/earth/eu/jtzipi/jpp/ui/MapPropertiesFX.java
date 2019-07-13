@@ -25,6 +25,8 @@ import javafx.beans.property.*;
 
 /**
  * Global Properties.
+ *
+ * @author jtzipi
  */
 public final class MapPropertiesFX {
 
