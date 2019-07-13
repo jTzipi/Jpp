@@ -19,6 +19,7 @@ package earth.eu.jtzipi.jpp.ui;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import earth.eu.jtzipi.jpp.IO;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperRealm;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
@@ -30,16 +31,20 @@ import earth.eu.jtzipi.jpp.ui.tree.ITreeNodeInfo;
 import earth.eu.jtzipi.jpp.ui.tree.TreeNodeInfoCell;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 
 /**
@@ -56,7 +61,7 @@ public final class MainPane extends Pane {
      */
     private static final MainPane SINGLETON = new MainPane();
 
-
+    // pen and paper realm
     private IPenAndPaperRealm ppRealm;
     // main pane
     private BorderPane mainPane;
@@ -125,7 +130,18 @@ public final class MainPane extends Pane {
         mainPane.prefWidthProperty().bind( PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D  ) );
         mainPane.setCenter( mapSPane );
         mainPane.setTop( toolBar );
-        //mainPane.setLeft( ppRealmTree );
+
+
+        Image bg = null;
+        try {
+            bg = IO.loadImageFromRes( Paths.get( "bg/bg_01.jpg" ) );
+        } catch ( IOException e ) {
+
+        }
+
+
+        BackgroundImage bgIm = new BackgroundImage( bg, null, null, null, null );
+        setBackground( new Background( bgIm ) );
 
 
         // getChildren().setAll(  t1, t );

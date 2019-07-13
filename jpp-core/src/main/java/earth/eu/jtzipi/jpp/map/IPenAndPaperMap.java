@@ -18,7 +18,6 @@ package earth.eu.jtzipi.jpp.map;
 
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 
-
 import java.util.List;
 
 /**
@@ -28,10 +27,21 @@ import java.util.List;
  *
  */
 public interface IPenAndPaperMap {
-
+    /**
+     * Minimum x coordinate.
+     */
     int MIN_X = 1;
+    /**
+     * Minimum y coordinate.
+     */
     int MIX_Y = 1;
+    /**
+     * minimum level.
+     */
     int MIN_LEVEL = -999;
+    /**
+     * Maximum level.
+     */
     int MAX_LEVEL = 1_000;
     /**
      * Name of map.
@@ -39,8 +49,13 @@ public interface IPenAndPaperMap {
      */
     String getName();
 
-
+    /**
+     * Map description.
+     *
+     * @return desc
+     */
     String getDescription();;
+
     /**
      * X dimension.
      * @return dim x
@@ -59,7 +74,14 @@ public interface IPenAndPaperMap {
      */
     int getLevel();
 
-    IPenAndPaperCell getCell( int row, int column );
+    /**
+     * Return cell [x,y].
+     *
+     * @param x x
+     * @param y y
+     * @return cell for location if found
+     */
+    IPenAndPaperCell getCell( int x, int y );
 
     /**
      * Cells of this map.

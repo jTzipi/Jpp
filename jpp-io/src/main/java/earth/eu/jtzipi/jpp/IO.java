@@ -51,9 +51,12 @@ public final class IO {
 
     // If path can not read
     private static final String PATH_UNKNOWN = "";
-    private static final Logger LOG = LoggerFactory.getLogger( "IOGysi" );
+
 
     private static final Path PATH_TO_RES = PATH_WORK_DIR.resolve( "jpp-core/src/main/resources/" );
+    private static final Logger LOG = LoggerFactory.getLogger( "IOGysi" );
+
+
     private IO() {
 
 
@@ -122,9 +125,9 @@ public final class IO {
      * @param path path
      * @param size size
      * @return Font object
-     * @throws IOException io loading
+     *
      */
-    public static Font loadFont( final Path path, final double size ) throws IOException {
+    public static Font loadFont( final Path path, final double size ) {
         Objects.requireNonNull( path );
         if ( size < MIN_FONT ) {
             throw new IllegalArgumentException( "Font size < " + MIN_FONT );
