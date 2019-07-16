@@ -68,7 +68,7 @@ public class EdgeTile extends Region {
     }
 
     private void init() {
-        DoubleProperty twProp = MapPropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty twProp = MapPropertiesFX.FX_TILE_WIDTH_PROP;
 
         prefWidthProperty().bind( twProp );
         prefHeightProperty().bind( twProp );

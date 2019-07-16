@@ -23,9 +23,12 @@ import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
-
+import javafx.scene.text.Text;
 
 
 /**
@@ -40,11 +43,17 @@ public class MapPane extends Pane {
      */
     IPenAndPaperMap pplm;
 
-
+    /**
+     * Width of pane binding.
+     */
     DoubleBinding fxWidthBinding;
-
+    /**
+     * Height of pane binding.
+     */
     DoubleBinding fxHeightBinding;
 
+    IntegerProperty xDimProp;
+    IntegerProperty yDimProp;
     /**
      * MapPanel.
      *
@@ -52,7 +61,8 @@ public class MapPane extends Pane {
      */
     MapPane( IPenAndPaperMap penAndPaperLevelMap ) {
         this.pplm = penAndPaperLevelMap;
-
+        this.xDimProp = new SimpleIntegerProperty( this, "", pplm.getDimX() );
+        this.yDimProp = new SimpleIntegerProperty( this, "", pplm.getDimY() );
         init();
         createMapPane();
     }
@@ -62,7 +72,7 @@ public class MapPane extends Pane {
         final DoubleBinding offset = MapPropertiesFX.FX_TILE_OFFSET_BIND;
         final DoubleProperty gapNorth = MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP;
         final DoubleProperty gapLeft = MapPropertiesFX.FX_GAP_EDGE_WEST_PROP;
-        final DoubleProperty tw = MapPropertiesFX.FX_WIDTH_PROP;
+        final DoubleProperty tw = MapPropertiesFX.FX_TILE_WIDTH_PROP;
         // set half of tile width gap
         //fxLeftGapBinding = tw.multiply( 0.5D );
         //fxTopGapBinding = tw.multiply( 0.5D );
@@ -75,9 +85,18 @@ public class MapPane extends Pane {
         prefHeightProperty().bind( fxHeightBinding );
         prefWidthProperty().bind( fxWidthBinding );
 
-        System.out.println( "Pref W/H " + fxWidthBinding.get() + " . " + fxHeightBinding.get() );
+
     }
 
+    public final IntegerProperty getXDimPropFX() {
+
+        return xDimProp;
+    }
+
+    public final IntegerProperty getYDimPropFX() {
+
+        return yDimProp;
+    }
 
     private void createMapPane() {
 
@@ -108,7 +127,13 @@ public class MapPane extends Pane {
             }
 
         }
+        Text info = new Text();
 
+        info.layoutXProperty().bind( prefWidthProperty().add( 10 ) );
+        info.layoutYProperty().bind( prefHeightProperty().add( 27 ) );
+        info.setText( "XY [" + prefWidthProperty().doubleValue() + ", " + prefHeightProperty().doubleValue() + "]" );
+
+        getChildren().add( info );
     }
 
 }

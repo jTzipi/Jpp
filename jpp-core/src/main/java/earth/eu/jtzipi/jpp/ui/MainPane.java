@@ -29,6 +29,7 @@ import earth.eu.jtzipi.jpp.ui.map.PenAndPaperRealm;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperSite;
 import earth.eu.jtzipi.jpp.ui.tree.ITreeNodeInfo;
 import earth.eu.jtzipi.jpp.ui.tree.TreeNodeInfoCell;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.*;
@@ -38,7 +39,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +65,12 @@ public final class MainPane extends Pane {
     private IPenAndPaperRealm ppRealm;
     // main pane
     private BorderPane mainPane;
+    // Dimension of grid spinner
+    private Spinner<Short> xdimSpin;
+    private Spinner<Short> yDimSpin;
 
-
+    private NumberBinding mainPanePrefWidthBind;
+    private NumberBinding mainPanePrefHeightBind;
     /**
      * MainPane.
      */
@@ -103,34 +107,34 @@ public final class MainPane extends Pane {
         toolBar.prefWidthProperty().bind( prefWidthProperty() );
 
         TreeView<ITreeNodeInfo> ppRealmTree = new TreeView<>();
-        ppRealmTree.setCellFactory( new Callback<TreeView<ITreeNodeInfo>, TreeCell<ITreeNodeInfo>>() {
-            @Override
-            public TreeCell<ITreeNodeInfo> call( TreeView<ITreeNodeInfo> iTreeNodeInfoTreeView ) {
-                return new TreeNodeInfoCell();
-            }
-        } );
+        ppRealmTree.setCellFactory( callback ->
+                new TreeNodeInfoCell()
+        );
 
         TreeItem<ITreeNodeInfo> root = createRealmTreeRoot();
 
         ppRealmTree.setRoot( root );
 
-
-        ScrollPane mapSPane = new ScrollPane(mapP);
-        mapSPane.setPrefSize( 600, 700 );
-
-
+        xdimSpin = new Spinner<>( 10, Short.MAX_VALUE, 1 );
+        yDimSpin = new Spinner<>( 10, Short.MAX_VALUE, 1 );
 
         StatusBar statusBar = new StatusBar();
 
+        mainPanePrefWidthBind = PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D );
+        mainPanePrefHeightBind = PenAndPaperPropertiesFX.WINDOW_HEIGHT_PROP_FX.subtract( 100D );
 
-
+        // Scrollpane for map pane
+        ScrollPane mapSPane = new ScrollPane( mapP );
+        mapSPane.prefWidthProperty().bind( mainPanePrefWidthBind );
+        mapSPane.prefHeightProperty().bind( mainPanePrefHeightBind );
         // main pane
         mainPane = new BorderPane();
         //mainPane.setPrefSize( 700D, 700D );
-        mainPane.prefWidthProperty().bind( PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D  ) );
+        mainPane.prefWidthProperty().bind( mainPanePrefWidthBind );
+        mainPane.prefHeightProperty().bind( mainPanePrefHeightBind );
         mainPane.setCenter( mapSPane );
         mainPane.setTop( toolBar );
-
+        mainPane.setBottom( statusBar );
 
         Image bg = null;
         try {
@@ -149,12 +153,17 @@ public final class MainPane extends Pane {
         getChildren().setAll( mainPane );
     }
 
+    private IPenAndPaperRealm createRealm() {
+
+        return PenAndPaperRealm.of( "Gadi!" );
+    }
+
     private ToolBar createMainToolbar() {
         // north tool bar
         ToolBar toolBar = new ToolBar();
 
 
-        DoubleProperty twProp = MapPropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty twProp = MapPropertiesFX.FX_TILE_WIDTH_PROP;
         BooleanProperty edgeProp = MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP;
 
         // increase grid size
@@ -199,6 +208,8 @@ public final class MainPane extends Pane {
         showEdgeTogB.setGraphic( edge );
         showEdgeTogB.setSelected( true );
         edgeProp.bind( showEdgeTogB.selectedProperty() );
+
+
         toolBar.getItems().setAll( grid, gysi, showEdgeTogB, plusRLabel, mi, tileSizeLab );
 
 

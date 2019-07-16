@@ -123,7 +123,7 @@ public class Tile extends Region {
         //aviP = new Pane();
 
         // tile width
-        final DoubleProperty tw = MapPropertiesFX.FX_WIDTH_PROP;
+        final DoubleProperty tw = MapPropertiesFX.FX_TILE_WIDTH_PROP;
 
         // offset x and y
 
