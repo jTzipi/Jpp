@@ -51,8 +51,11 @@ public class MapPane extends Pane {
      * Height of pane binding.
      */
     DoubleBinding fxHeightBinding;
-
+    /**
+     * tiles x dir.
+     */
     IntegerProperty xDimProp;
+    /** tile y dir. */
     IntegerProperty yDimProp;
     /**
      * MapPanel.
@@ -73,19 +76,21 @@ public class MapPane extends Pane {
         final DoubleProperty gapNorth = MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP;
         final DoubleProperty gapLeft = MapPropertiesFX.FX_GAP_EDGE_WEST_PROP;
         final DoubleProperty tw = MapPropertiesFX.FX_TILE_WIDTH_PROP;
-        // set half of tile width gap
+
         //fxLeftGapBinding = tw.multiply( 0.5D );
         //fxTopGapBinding = tw.multiply( 0.5D );
 
         // width = rows * tile size + offset + left gap
-        fxWidthBinding = tw.multiply( pplm.getDimX() ).add( offset ).add( gapNorth );
+        fxWidthBinding = tw.multiply( xDimProp ).add( offset ).add( gapNorth );
         // height = rows * tile size + offset + top gap
-        fxHeightBinding = tw.multiply( pplm.getDimY() ).add( offset ).add( gapLeft );
+        fxHeightBinding = tw.multiply( yDimProp ).add( offset ).add( gapLeft );
         // bind width and height
         prefHeightProperty().bind( fxHeightBinding );
         prefWidthProperty().bind( fxWidthBinding );
 
 
+        yDimProp.addListener( iv -> createMapPane() );
+        xDimProp.addListener( iv -> createMapPane() );
     }
 
     public final IntegerProperty getXDimPropFX() {
@@ -99,20 +104,23 @@ public class MapPane extends Pane {
     }
 
     private void createMapPane() {
+        getChildren().setAll();
+        int xt = xDimProp.intValue();
+        int yt = yDimProp.intValue();
 
 
-        for ( int i = 0; i < pplm.getDimX(); i++ ) {
+        for ( int i = 0; i < xt; i++ ) {
             getChildren().add( EdgeTile.of( Position2D.N, i ) );
         }
 
-        for ( int iy = 0; iy < pplm.getDimY(); iy++ ) {
+        for ( int iy = 0; iy < yt; iy++ ) {
             getChildren().add( EdgeTile.of( Position2D.W, iy ) );
         }
         // all tile dim x
-        for ( int i = 0; i < pplm.getDimX(); i++ ) {
+        for ( int i = 0; i < xt; i++ ) {
 
             // all tile dim y
-            for ( int j = 0; j < pplm.getDimY(); j++ ) {
+            for ( int j = 0; j < yt; j++ ) {
 //                // add edge west
 //                if( j == i ) {
 //                    EdgeTile edge = EdgeTile.of( Position2D.W, j );
@@ -129,7 +137,7 @@ public class MapPane extends Pane {
         }
         Text info = new Text();
 
-        info.layoutXProperty().bind( prefWidthProperty().add( 10 ) );
+        info.layoutXProperty().bind( prefWidthProperty().subtract( 10 ) );
         info.layoutYProperty().bind( prefHeightProperty().add( 27 ) );
         info.setText( "XY [" + prefWidthProperty().doubleValue() + ", " + prefHeightProperty().doubleValue() + "]" );
 

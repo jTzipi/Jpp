@@ -96,7 +96,7 @@ public final class MainPane extends Pane {
         IPenAndPaperSite pp = PenAndPaperSite.of( "Tzipi" );
         ppRealm.addSite( pp );
 
-        IPenAndPaperMap pplm = PenAndPaperLevelMap.of( 10, 7, 0, "Gysi" );
+        IPenAndPaperMap pplm = PenAndPaperLevelMap.of( 10, 17, 0, "Gysi" );
 
         pp.addMap( pplm );
 
@@ -115,8 +115,19 @@ public final class MainPane extends Pane {
 
         ppRealmTree.setRoot( root );
 
-        xdimSpin = new Spinner<>( 10, Short.MAX_VALUE, 1 );
-        yDimSpin = new Spinner<>( 10, Short.MAX_VALUE, 1 );
+        xdimSpin = new Spinner<>( pplm.getDimX(), Short.MAX_VALUE, pplm.getDimX() );
+        xdimSpin.setPrefWidth( 57D );
+
+        yDimSpin = new Spinner<>( pplm.getDimY(), Short.MAX_VALUE, pplm.getDimY() );
+        yDimSpin.setPrefWidth( 57D );
+
+        xdimSpin.valueProperty().addListener( iv -> mapP.getXDimPropFX().setValue( xdimSpin.getValue() ) );
+        yDimSpin.valueProperty().addListener( iv -> mapP.getYDimPropFX().setValue( yDimSpin.getValue() ) );
+
+
+        Label xTileLab = new Label( "X" );
+        Label yTileLab = new Label( "Y" );
+        toolBar.getItems().addAll( xTileLab, xdimSpin, yTileLab, yDimSpin );
 
         StatusBar statusBar = new StatusBar();
 
