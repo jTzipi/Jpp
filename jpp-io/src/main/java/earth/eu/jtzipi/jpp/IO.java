@@ -51,9 +51,10 @@ public final class IO {
 
     // If path can not read
     private static final String PATH_UNKNOWN = "";
-
-
-    private static final Path PATH_TO_RES = PATH_WORK_DIR.resolve( "jpp-core/src/main/resources/" );
+    /**
+     * Path to resource.
+     */
+    public static final Path PATH_TO_RES = PATH_WORK_DIR.resolve( "jpp-core/src/main/resources/" );
     private static final Logger LOG = LoggerFactory.getLogger( "IOGysi" );
 
 
