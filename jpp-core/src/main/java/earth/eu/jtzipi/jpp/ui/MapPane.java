@@ -22,11 +22,7 @@ import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -37,77 +33,40 @@ import javafx.scene.text.Text;
 public class MapPane extends Pane {
 
     /** map .*/
-    // Pane tileP;
-    /**
-     * content of map.
-     */
-    IPenAndPaperMap pplm;
+    private AvivPane avivPane;
 
     /**
-     * Width of pane binding.
+     * Map geo properties .
      */
-    DoubleBinding fxWidthBinding;
-    /**
-     * Height of pane binding.
-     */
-    DoubleBinding fxHeightBinding;
-    /**
-     * tiles x dir.
-     */
-    IntegerProperty xDimProp;
-    /** tile y dir. */
-    IntegerProperty yDimProp;
+    private MapGeoPropVO geoPropVO;
+
     /**
      * MapPanel.
      *
      * @param penAndPaperLevelMap map to draw
      */
     MapPane( IPenAndPaperMap penAndPaperLevelMap ) {
-        this.pplm = penAndPaperLevelMap;
-        this.xDimProp = new SimpleIntegerProperty( this, "", pplm.getDimX() );
-        this.yDimProp = new SimpleIntegerProperty( this, "", pplm.getDimY() );
+
+        this.geoPropVO = MapGeoPropVO.of( penAndPaperLevelMap );
+
         init();
         createMapPane();
     }
 
-
     private void init() {
-        final DoubleBinding offset = MapPropertiesFX.FX_TILE_OFFSET_BIND;
-        final DoubleProperty gapNorth = MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP;
-        final DoubleProperty gapLeft = MapPropertiesFX.FX_GAP_EDGE_WEST_PROP;
-        final DoubleProperty tw = MapPropertiesFX.FX_TILE_WIDTH_PROP;
-
-        //fxLeftGapBinding = tw.multiply( 0.5D );
-        //fxTopGapBinding = tw.multiply( 0.5D );
-
-        // width = rows * tile size + offset + left gap
-        fxWidthBinding = tw.multiply( xDimProp ).add( offset ).add( gapNorth );
-        // height = rows * tile size + offset + top gap
-        fxHeightBinding = tw.multiply( yDimProp ).add( offset ).add( gapLeft );
         // bind width and height
-        prefHeightProperty().bind( fxHeightBinding );
-        prefWidthProperty().bind( fxWidthBinding );
-
-
-        yDimProp.addListener( iv -> createMapPane() );
-        xDimProp.addListener( iv -> createMapPane() );
-    }
-
-    public final IntegerProperty getXDimPropFX() {
-
-        return xDimProp;
-    }
-
-    public final IntegerProperty getYDimPropFX() {
-
-        return yDimProp;
+        prefHeightProperty().bind( geoPropVO.fxHeightBinding() );
+        prefWidthProperty().bind( geoPropVO.fxWidthBinding() );
+        // on change
+        geoPropVO.fxDimXProp().addListener( iv -> createMapPane() );
+        geoPropVO.fxDimYProp().addListener( iv -> createMapPane() );
     }
 
     private void createMapPane() {
         getChildren().setAll();
-        int xt = xDimProp.intValue();
-        int yt = yDimProp.intValue();
 
+        int xt = geoPropVO.fxDimXProp().intValue();
+        int yt = geoPropVO.fxDimYProp().intValue();
 
         for ( int i = 0; i < xt; i++ ) {
             getChildren().add( EdgeTile.of( Position2D.N, i ) );
@@ -144,4 +103,7 @@ public class MapPane extends Pane {
         getChildren().add( info );
     }
 
+    MapGeoPropVO mapPropVO() {
+        return this.geoPropVO;
+    }
 }

@@ -66,7 +66,7 @@ public final class MainPane extends Pane {
     // main pane
     private BorderPane mainPane;
     // Dimension of grid spinner
-    private Spinner<Short> xdimSpin;
+    private Spinner<Short> xDimSpin;
     private Spinner<Short> yDimSpin;
 
     private NumberBinding mainPanePrefWidthBind;
@@ -115,19 +115,21 @@ public final class MainPane extends Pane {
 
         ppRealmTree.setRoot( root );
 
-        xdimSpin = new Spinner<>( pplm.getDimX(), Short.MAX_VALUE, pplm.getDimX() );
-        xdimSpin.setPrefWidth( 57D );
+        xDimSpin = new Spinner<>( pplm.getDimX(), Short.MAX_VALUE, pplm.getDimX() );
+        xDimSpin.setPrefWidth( 77D );
 
         yDimSpin = new Spinner<>( pplm.getDimY(), Short.MAX_VALUE, pplm.getDimY() );
-        yDimSpin.setPrefWidth( 57D );
+        yDimSpin.setPrefWidth( 77D );
 
-        xdimSpin.valueProperty().addListener( iv -> mapP.getXDimPropFX().setValue( xdimSpin.getValue() ) );
-        yDimSpin.valueProperty().addListener( iv -> mapP.getYDimPropFX().setValue( yDimSpin.getValue() ) );
+        // xDimSpin.valueProperty().addListener( iv -> mapP.mapPropVO().setTileX( xDimSpin.getValue() ) );
+        // yDimSpin.valueProperty().addListener( iv -> mapP.mapPropVO().setTileY( yDimSpin.getValue() ) );
 
+        mapP.mapPropVO().fxDimYProp().bind( yDimSpin.valueProperty() );
+        mapP.mapPropVO().fxDimXProp().bind( xDimSpin.valueProperty() );
 
         Label xTileLab = new Label( "X" );
         Label yTileLab = new Label( "Y" );
-        toolBar.getItems().addAll( xTileLab, xdimSpin, yTileLab, yDimSpin );
+        toolBar.getItems().addAll( xTileLab, xDimSpin, yTileLab, yDimSpin );
 
         StatusBar statusBar = new StatusBar();
 

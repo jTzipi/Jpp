@@ -70,7 +70,9 @@ public final class MapPropertiesFX {
      * West edge length.
      */
     public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
-
+    /**
+     * Offset left and top of map pane to show legend.
+     */
     public static DoubleBinding FX_TILE_OFFSET_BIND;
 
 
