@@ -37,7 +37,14 @@ import java.util.List;
 import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
 
 /**
- * A tile is a square on a pan & paper map.
+ * A tile is a square cell on a pan & paper map.
+ * <p>
+ *
+ *     This is the visual part of the square. It is responsible for drawing all
+ *     "items" containing. Like walls ,switches or treasures.
+ *     Its content relies on a {@linkplain IPenAndPaperCell} cell.
+ *
+ * </p>
  *
  * @author jTzipi
  */
@@ -55,12 +62,6 @@ public class Tile extends Region {
 
     } */
 
-    /**
-     * Segments .
-     */
-    /** East Wall.*/
-
-
     final IPenAndPaperCell ppc;
     //Pane baseP;
     //Pane aviP;
@@ -75,7 +76,6 @@ public class Tile extends Region {
      * Tile complete constructor.
      *
      * @param ppc pen and paper cell
-
      *
      */
     Tile( IPenAndPaperCell ppc ) {
@@ -90,7 +90,13 @@ public class Tile extends Region {
         LoggerFactory.getLogger( "Tile" ).error( "Gysi" );
     }
 
-
+    /**
+     * Tile.
+     *
+     * @param x     pos x
+     * @param y     pos y
+     * @param level leve
+     */
     Tile( int x, int y, int level ) {
         this( PenAndPaperCell.ofEmpty( x, y, level ) );
     }
@@ -101,7 +107,6 @@ public class Tile extends Region {
 
 
         }
-
 
         return new Tile( x, y, IPenAndPaperCell.LEVEL_DEFAULT );
     }
@@ -114,8 +119,6 @@ public class Tile extends Region {
         return new Tile( PenAndPaperCell.ofSolid( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
     }
 
-
-
     private void create() {
 
 
@@ -123,7 +126,7 @@ public class Tile extends Region {
         //aviP = new Pane();
 
         // tile width
-        final DoubleProperty tw = MapPropertiesFX.FX_WIDTH_PROP;
+        final DoubleProperty tw = MapPropertiesFX.FX_TILE_WIDTH_PROP;
 
         // offset x and y
 
@@ -223,10 +226,10 @@ public class Tile extends Region {
         segL.add( nW );
         segL.add( wW );
 
+        //
         Text tt = new Text();
 
-
-        tt.setFont( Font.font( 27D ) );
+        tt.setFont( Font.font( 10D ) );
         tt.setText( ppc.getX() + " " + ppc.getY() );
         tt.layoutXProperty().bind( prefWidthProperty().multiply( 0.1D ) );
         tt.layoutYProperty().bind( prefHeightProperty().subtract( 10D ) );
@@ -234,36 +237,6 @@ public class Tile extends Region {
 
         return segL;
     }
-
-
-
-
-//    public static final class Builder implements IBuilder<Tile> {
-//
-//        // mandatory
-//        private final int lx;
-//        private final int ly;
-//        // optional
-//
-//        private int level;
-//
-//
-//        Builder( final int lx, final int ly ) {
-//            this.lx = lx;
-//            this.ly = ly;
-//        }
-//
-//
-//        @Override
-//        public Tile build() {
-//            return new Tile( this );
-//        }
-//    }
-
-
-    // public Map<Dir2D, WallSegments> getWallMap() {
-    //     return wallM;
-    // }
 
 
     public static class Floor {

@@ -23,6 +23,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -44,9 +45,9 @@ public class Wall  {
     // Flip
     private static final Rotate ROTATE_180_DEGREE = new Rotate( 180D );
     // Translate south
-    private static final Translate TLATE_SOUTH = new Translate( 0D, MapPropertiesFX.FX_WIDTH_PROP.doubleValue() );
+    private static final Translate TLATE_SOUTH = new Translate( 0D, MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue() );
     // Translate east
-    private static final Translate TLATE_EAST = new Translate( MapPropertiesFX.FX_WIDTH_PROP.doubleValue(), 0D);
+    private static final Translate TLATE_EAST = new Translate( MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue(), 0D );
 
 
     static {
@@ -54,7 +55,7 @@ public class Wall  {
          * Bind everything to tiles width.
          */
 
-        DoubleProperty widthProp = MapPropertiesFX.FX_WIDTH_PROP;
+        DoubleProperty widthProp = MapPropertiesFX.FX_TILE_WIDTH_PROP;
         ROTATE_180_DEGREE.pivotXProperty().bind( widthProp.divide( 2D ) );
         TLATE_SOUTH.yProperty().bind( widthProp );
         TLATE_EAST.xProperty().bind( widthProp );
@@ -205,7 +206,7 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double w = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
                 double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();
@@ -225,7 +226,7 @@ public class Wall  {
             public Shape createPath() {
                 //return new Path(  );
 
-                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double gysi = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
                 double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
@@ -248,15 +249,14 @@ public class Wall  {
             public Shape createPath() {
 
 
-
-                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double gysi = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
                 double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
                 double door = MapPropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
 
 
-                return   PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0 ).lx( gysi ).build()             ;
+                return PathBuilder.create().strokeWidth( ws ).lx( near ).ly( door ).lx( gysi - near ).ly( 0D ).lx( gysi ).build();
             }
         },
         /**
@@ -265,7 +265,16 @@ public class Wall  {
         SPECIAL( 9L, false ) {
             @Override
             public Shape createPath() {
-                return null;
+
+
+                double gysi = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
+                double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
+                double dash = MapPropertiesFX.SEGMENT_LEN_SMALL.doubleValue();
+
+                Line solid = new Line( 0D, 0D, gysi, 0D );
+                solid.setStrokeWidth( ws );
+                solid.getStrokeDashArray().addAll( dash, dash );
+                return solid;
             }
         },
 
@@ -289,9 +298,8 @@ public class Wall  {
 
 
                 //double ws = width * SEGMENT_WIDTH;
-                double gysi = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double gysi = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
                 double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
-
                 double near = MapPropertiesFX.SEGMENT_LEN.doubleValue();
 
 
@@ -322,7 +330,7 @@ public class Wall  {
             public Shape createPath() {
 
 
-                double w = MapPropertiesFX.FX_WIDTH_PROP.doubleValue();
+                double w = MapPropertiesFX.FX_TILE_WIDTH_PROP.doubleValue();
                 double ws = MapPropertiesFX.SEGMENT_WIDTH.doubleValue();
 
                 Path path = PathBuilder.create().strokeWidth( ws ).lx( w ).build();

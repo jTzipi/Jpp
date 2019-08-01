@@ -24,7 +24,9 @@ import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 
 /**
- * Global Properties.
+ * Global Properties of Map.
+ *
+ * @author jtzipi
  */
 public final class MapPropertiesFX {
 
@@ -41,24 +43,24 @@ public final class MapPropertiesFX {
     public static final double MAX_LEN_TILE = 100D;
 
     /** Main Property every other is derived from. */
-    public static final DoubleProperty FX_WIDTH_PROP = new SimpleDoubleProperty( PREF_LEN_TILE );
+    public static final DoubleProperty FX_TILE_WIDTH_PROP = new SimpleDoubleProperty( PREF_LEN_TILE );
 
     /**
      *  A single default segment's length.
      */
-    public static NumberBinding SEGMENT_LEN = FX_WIDTH_PROP.multiply( ISegment.LEN_DEFAULT );
+    public static NumberBinding SEGMENT_LEN = FX_TILE_WIDTH_PROP.multiply( ISegment.LEN_DEFAULT );
     /**
      * A small segment's .
      */
-    public static NumberBinding SEGMENT_LEN_SMALL  = FX_WIDTH_PROP.multiply( ISegment.LEN_SMALL );
+    public static NumberBinding SEGMENT_LEN_SMALL = FX_TILE_WIDTH_PROP.multiply( ISegment.LEN_SMALL );
     /**
      * A large segment.
      */
-    public static NumberBinding SEGMENT_LEN_LARGE = FX_WIDTH_PROP.multiply( ISegment.LEN_LARGE );
+    public static NumberBinding SEGMENT_LEN_LARGE = FX_TILE_WIDTH_PROP.multiply( ISegment.LEN_LARGE );
     /**
      * Width of segment.
      */
-    public static NumberBinding SEGMENT_WIDTH = FX_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
+    public static NumberBinding SEGMENT_WIDTH = FX_TILE_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
 
     /**
      * North Edge length.
@@ -68,7 +70,9 @@ public final class MapPropertiesFX {
      * West edge length.
      */
     public static DoubleProperty FX_GAP_EDGE_WEST_PROP = new SimpleDoubleProperty( 25D );
-
+    /**
+     * Offset left and top of map pane to show legend.
+     */
     public static DoubleBinding FX_TILE_OFFSET_BIND;
 
 
@@ -86,10 +90,10 @@ public final class MapPropertiesFX {
         FX_TILE_OFFSET_BIND  = new DoubleBinding() {
             @Override
             protected double computeValue() {
-                return FX_SHOW_MAP_EDGE_PROP.get() ? FX_WIDTH_PROP.doubleValue() : 0D;
+                return FX_SHOW_MAP_EDGE_PROP.get() ? FX_TILE_WIDTH_PROP.doubleValue() : 0D;
             }
         };
-        FX_WIDTH_PROP.addListener( (iv) -> FX_TILE_OFFSET_BIND.invalidate() );
+        FX_TILE_WIDTH_PROP.addListener( ( iv ) -> FX_TILE_OFFSET_BIND.invalidate() );
     }
 
 
