@@ -20,6 +20,9 @@ package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
+import javafx.animation.Animation;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
@@ -31,8 +34,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
-
+/**
+ * Tile on the edge of map.
+ *
+ * @author jTzipi
+ */
 public class EdgeTile extends Region {
 
     Position2D p2D; // Position
@@ -47,12 +56,15 @@ public class EdgeTile extends Region {
 
     BooleanBinding mouseXOverBind;   // is mouse over a north/south tile belonging to this
     BooleanBinding mouseYOverBind;   // is mouse over a west/east tile
+
+    Transition mouseOverTra;
+    Transition mouseLeftTra;
     /**
      * Edge Tile.
      * @param position2D position
      * @param index index
      */
-    EdgeTile(  final Position2D position2D, final int index ) {
+    EdgeTile( final Position2D position2D, final int index ) {
         this.p2D = position2D;
         this.idx = index;
         this.tt = new Text();
@@ -62,6 +74,12 @@ public class EdgeTile extends Region {
         }
     }
 
+    /**
+     * Return tile for position and index.
+     * @param pos2D position
+     * @param index index
+     * @return
+     */
     public static EdgeTile of( Position2D pos2D, final int index )  {
 
         return new EdgeTile( pos2D, index );
@@ -75,8 +93,19 @@ public class EdgeTile extends Region {
 
         twProp.addListener( iv -> update(  ) );
         MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
-
+        // DEBUG
         NumberBinding yPosBind =prefHeightProperty().subtract( 12D );
+
+        ScaleTransition ts = new ScaleTransition( Duration.millis( 170L ), tt );
+        ts.setFromX( 1D );
+        ts.setFromY( 1D );
+        ts.setToX( 7.5D );
+        ts.setToY( 7.5D );
+
+        mouseOverTra = ts;
+
+
+
         // layout
         // ------
         // Caution: add + 1 because of corner edge
@@ -122,9 +151,14 @@ public class EdgeTile extends Region {
     private void onMouse( boolean over ) {
         // if mouse over a cell of this edge
         if ( over ) {
-            setBackground( new Background( new BackgroundFill( Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY ) ) );
+
+            mouseOverTra.setRate( 1D );
+            mouseOverTra.play();
+            //setBackground( new Background( new BackgroundFill( Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY ) ) );
         } else {
-            setBackground( Background.EMPTY );
+            //setBackground( Background.EMPTY );
+            mouseOverTra.setRate( -1D );
+            mouseOverTra.play();
         }
     }
 
