@@ -18,6 +18,7 @@
 package earth.eu.jtzipi.jpp.ui;
 
 import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
+import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -68,6 +69,9 @@ public final class MapGeoPropVO {
      * content of map.
      */
     private IPenAndPaperMap ppMap;
+
+
+    private Tile tile;
 
     private MapGeoPropVO( IPenAndPaperMap penAndPaperMap ) {
         this.ppMap = penAndPaperMap;

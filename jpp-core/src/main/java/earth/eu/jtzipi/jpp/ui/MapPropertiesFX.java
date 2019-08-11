@@ -61,7 +61,6 @@ public final class MapPropertiesFX {
      * Width of segment.
      */
     public static NumberBinding SEGMENT_WIDTH = FX_TILE_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
-
     /**
      * North Edge length.
      */
@@ -74,19 +73,34 @@ public final class MapPropertiesFX {
      * Offset left and top of map pane to show legend.
      */
     public static DoubleBinding FX_TILE_OFFSET_BIND;
-
-
-
+    /** Mouse map grid x position.  */
+    public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty( -1 );
+    /** Mouse map grid y position.  */
+    public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty( -1 );
     /**
      * Show edge prop.
      */
-    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty(true);
-    /** Mouse map grid x position.  */
-    public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty();
-    /** Mouse map grid y position.  */
-    public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty();
+    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty( true );
+    /**
+     * X Pos of selected tile.
+     */
+    public static final IntegerProperty FX_SEL_TILE_X_PROP = new SimpleIntegerProperty( -1 );
+    /**
+     * Y Pos of selected tile.
+     */
+    public static final IntegerProperty FX_SEL_TILE_Y_PROP = new SimpleIntegerProperty( -1 );
+    /**
+     * X offset of tile mouse is over.
+     */
+    public static NumberBinding FX_TILE_HOVER_OFF_X_BIND;
+    /**
+     * Y offset of tile mouse is over.
+     */
+    public static NumberBinding FX_TILE_HOVER_OFF_Y_BIND;
 
     static {
+
+        // If gap is displayed
         FX_TILE_OFFSET_BIND  = new DoubleBinding() {
             @Override
             protected double computeValue() {
@@ -94,6 +108,11 @@ public final class MapPropertiesFX {
             }
         };
         FX_TILE_WIDTH_PROP.addListener( ( iv ) -> FX_TILE_OFFSET_BIND.invalidate() );
+        //
+        FX_TILE_HOVER_OFF_X_BIND = FX_MOUSE_X_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_WEST_PROP ).add( FX_TILE_OFFSET_BIND );
+
+        FX_TILE_HOVER_OFF_Y_BIND = FX_MOUSE_Y_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_NORTH_PROP ).add( FX_TILE_OFFSET_BIND );
+
     }
 
 

@@ -27,6 +27,7 @@ import earth.eu.jtzipi.jpp.map.MapToTree;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperRealm;
 import earth.eu.jtzipi.jpp.ui.map.PenAndPaperSite;
+import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tree.ITreeNodeInfo;
 import earth.eu.jtzipi.jpp.ui.tree.TreeNodeInfoCell;
 import javafx.beans.binding.NumberBinding;
@@ -34,11 +35,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +70,8 @@ public final class MainPane extends Pane {
 
     private NumberBinding mainPanePrefWidthBind;
     private NumberBinding mainPanePrefHeightBind;
+
+
     /**
      * MainPane.
      */
@@ -99,9 +100,10 @@ public final class MainPane extends Pane {
         IPenAndPaperMap pplm = PenAndPaperLevelMap.of( 10, 17, 0, "Gysi" );
 
         pp.addMap( pplm );
-
-        MapPane mapP = new MapPane( pplm );
-
+        MapGeoPropVO mgp = MapGeoPropVO.of( pplm );
+        MapPane mapP = new MapPane( mgp );
+        MapEdgePane westEdgePane = MapEdgePane.westEdge( mgp );
+        MapEdgePane northEdgePane = MapEdgePane.northEdge( mgp );
 
         ToolBar toolBar = createMainToolbar();
         toolBar.prefWidthProperty().bind( prefWidthProperty() );
@@ -124,8 +126,8 @@ public final class MainPane extends Pane {
         // xDimSpin.valueProperty().addListener( iv -> mapP.mapPropVO().setTileX( xDimSpin.getValue() ) );
         // yDimSpin.valueProperty().addListener( iv -> mapP.mapPropVO().setTileY( yDimSpin.getValue() ) );
 
-        mapP.mapPropVO().fxDimYProp().bind( yDimSpin.valueProperty() );
-        mapP.mapPropVO().fxDimXProp().bind( xDimSpin.valueProperty() );
+        mgp.fxDimYProp().bind( yDimSpin.valueProperty() );
+        mgp.fxDimXProp().bind( xDimSpin.valueProperty() );
 
         Label xTileLab = new Label( "X" );
         Label yTileLab = new Label( "Y" );
@@ -135,11 +137,16 @@ public final class MainPane extends Pane {
 
         mainPanePrefWidthBind = PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D );
         mainPanePrefHeightBind = PenAndPaperPropertiesFX.WINDOW_HEIGHT_PROP_FX.subtract( 100D );
+        AvivPane aviP = new AvivPane( mgp );
+        StackPane map = new StackPane( mapP, aviP );
 
         // Scrollpane for map pane
-        ScrollPane mapSPane = new ScrollPane( mapP );
+        ScrollPane mapSPane = new ScrollPane( map );
+        mapSPane.setPannable( true );
         mapSPane.prefWidthProperty().bind( mainPanePrefWidthBind );
         mapSPane.prefHeightProperty().bind( mainPanePrefHeightBind );
+
+
         // main pane
         mainPane = new BorderPane();
         //mainPane.setPrefSize( 700D, 700D );

@@ -18,7 +18,6 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
 import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
@@ -32,9 +31,6 @@ import javafx.scene.text.Text;
  */
 public class MapPane extends Pane {
 
-    /** map .*/
-    private AvivPane avivPane;
-
     /**
      * Map geo properties .
      */
@@ -43,16 +39,18 @@ public class MapPane extends Pane {
     /**
      * MapPanel.
      *
-     * @param penAndPaperLevelMap map to draw
+     * @param mapGeoProp map prop
      */
-    MapPane( IPenAndPaperMap penAndPaperLevelMap ) {
-
-        this.geoPropVO = MapGeoPropVO.of( penAndPaperLevelMap );
+    MapPane( final MapGeoPropVO mapGeoProp ) {
+        this.geoPropVO = mapGeoProp;
 
         init();
         createMapPane();
     }
 
+    /**
+     * Init this pane.
+     */
     private void init() {
         // bind width and height
         prefHeightProperty().bind( geoPropVO.fxHeightBinding() );
@@ -62,6 +60,9 @@ public class MapPane extends Pane {
         geoPropVO.fxDimYProp().addListener( iv -> createMapPane() );
     }
 
+    /**
+     * Create this pane.
+     */
     private void createMapPane() {
         getChildren().setAll();
 
@@ -80,17 +81,8 @@ public class MapPane extends Pane {
 
             // all tile dim y
             for ( int j = 0; j < yt; j++ ) {
-//                // add edge west
-//                if( j == i ) {
-//                    EdgeTile edge = EdgeTile.of( Position2D.W, j );
-//                    getChildren().add( edge );
-//
-//                }
-                // new tile pane
-                Tile tile = Tile.solid( i, j );
 
-
-                getChildren().add( tile );
+                getChildren().add( Tile.of( i, j ) );
             }
 
         }
@@ -103,7 +95,5 @@ public class MapPane extends Pane {
         getChildren().add( info );
     }
 
-    MapGeoPropVO mapPropVO() {
-        return this.geoPropVO;
-    }
+
 }

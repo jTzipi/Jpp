@@ -20,9 +20,8 @@ package earth.eu.jtzipi.jpp.ui.tile;
 
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
-import javafx.animation.Animation;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
+import earth.eu.jtzipi.jpp.util.FXUtils;
+import javafx.animation.*;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
@@ -32,7 +31,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -58,7 +57,14 @@ public class EdgeTile extends Region {
     BooleanBinding mouseYOverBind;   // is mouse over a west/east tile
 
     Transition mouseOverTra;
-    Transition mouseLeftTra;
+    Transition bgTra;
+    Polygon t;
+
+    ParallelTransition pt;
+
+    Color mouseOverCol = Color.gray( 0.74D );
+    Background bgDef = Background.EMPTY;
+    Background bgMOver = FXUtils.createColorBG( mouseOverCol );
     /**
      * Edge Tile.
      * @param position2D position
@@ -86,16 +92,18 @@ public class EdgeTile extends Region {
     }
 
     private void init() {
+        // width of tile
         DoubleProperty twProp = MapPropertiesFX.FX_TILE_WIDTH_PROP;
-
+        // bind to this tile
         prefWidthProperty().bind( twProp );
         prefHeightProperty().bind( twProp );
-
+        // on change
         twProp.addListener( iv -> update(  ) );
         MapPropertiesFX.FX_SHOW_MAP_EDGE_PROP.addListener( iv -> update(  ) );
         // DEBUG
         NumberBinding yPosBind =prefHeightProperty().subtract( 12D );
 
+        // Text transform
         ScaleTransition ts = new ScaleTransition( Duration.millis( 170L ), tt );
         ts.setFromX( 1D );
         ts.setFromY( 1D );
@@ -103,7 +111,6 @@ public class EdgeTile extends Region {
         ts.setToY( 7.5D );
 
         mouseOverTra = ts;
-
 
 
         // layout
@@ -151,7 +158,7 @@ public class EdgeTile extends Region {
     private void onMouse( boolean over ) {
         // if mouse over a cell of this edge
         if ( over ) {
-
+            setBackground( bgMOver );
             mouseOverTra.setRate( 1D );
             mouseOverTra.play();
             //setBackground( new Background( new BackgroundFill( Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY ) ) );
@@ -159,6 +166,7 @@ public class EdgeTile extends Region {
             //setBackground( Background.EMPTY );
             mouseOverTra.setRate( -1D );
             mouseOverTra.play();
+            setBackground( bgDef );
         }
     }
 
@@ -188,6 +196,18 @@ public class EdgeTile extends Region {
         }
 
 
-        getChildren().setAll( pwe, pww, pws, pwn, tt );
+        t = new Polygon();
+        t.getPoints().addAll( 0D, 0D, 25D, 0D, 12.4D, 25D );
+
+        t.layoutXProperty().bind( prefWidthProperty().divide( 2 ).subtract( 12.4D ) );
+        t.layoutYProperty().bind( prefHeightProperty().subtract( 12.4D ) );
+        t.setStroke( Color.gray( 0.64D ) );
+        t.setFill( Color.gray( 0.7D ) );
+
+        t.setStrokeLineCap( StrokeLineCap.ROUND );
+        t.setStrokeLineJoin( StrokeLineJoin.ROUND );
+        t.setStrokeWidth( 1.5D );
+
+        getChildren().setAll( pwe, pww, pws, pwn, tt, t );
     }
 }
