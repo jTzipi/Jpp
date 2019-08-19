@@ -18,13 +18,17 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 
+import earth.eu.jtzipi.jpp.cell.ICellQuad;
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
+
+import earth.eu.jtzipi.jpp.ui.tile.segment.ITag;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -33,11 +37,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
 
@@ -168,8 +176,13 @@ public class Tile extends Region {
         setOnMouseEntered( me -> onMouseEntered() ); // me -> aviP.setVisible( true )
         setOnMouseExited( me -> onMouseOff() );
 
-        setOnMouseClicked( me -> onMouseClicked());
+        setOnMouseClicked( me -> {
+            //MapPropertiesFX.FX_MOUSE_EVENT_PROP.setValue( me );
+            onMouseClicked();
+        } );
 
+        // Add key listener
+        MapPropertiesFX.FX_KEY_EVENT_PROP.addListener( ( obs, keOld, ke ) -> onKeyTyped( ke ) );
 
         //getChildren().addAll( baseP, aviP );
 
@@ -192,8 +205,10 @@ public class Tile extends Region {
     }
 
     private void onMouseClicked() {
-        MapPropertiesFX.FX_SEL_TILE_X_PROP.setValue( ppc.getX() );
-        MapPropertiesFX.FX_SEL_TILE_Y_PROP.setValue( ppc.getY() );
+
+        IPenAndPaperCell lastClicked = MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue();
+        MapPropertiesFX.FX_CLICKED_PPC_PROP.setValue( ppc == lastClicked ? null : ppc );
+
         System.out.println( "click '" + ppc.getX() + " " + ppc.getY() );
     }
 
@@ -234,6 +249,14 @@ public class Tile extends Region {
 
     }
 
+    private void onKeyTyped( KeyEvent keyEvent ) {
+        //System.out.println( "Type " + keyEvent );
+        if ( MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue() == null ) {
+            System.out.println( "Kein aktives tile" );
+            return;
+        }
+    }
+
     private Collection<? extends Shape> createTile() {
                 // segment size
 
@@ -265,10 +288,20 @@ public class Tile extends Region {
         return segL;
     }
 
+    /**
+     *
+     */
+    public static final class Segments {
 
-    public static class Floor {
+        // Tags of this tile
+        Set<ITag> tagS;
+        // Walls of this tile
+        long idWallN;
+        long idWallE;
+        long idWallW;
+        long idWallS;
 
-        public static final Floor FLOOR_EMPTY = new Floor();
 
     }
+
 }

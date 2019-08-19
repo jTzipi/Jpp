@@ -18,10 +18,16 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Global Properties of Map.
@@ -81,14 +87,7 @@ public final class MapPropertiesFX {
      * Show edge prop.
      */
     public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty( true );
-    /**
-     * X Pos of selected tile.
-     */
-    public static final IntegerProperty FX_SEL_TILE_X_PROP = new SimpleIntegerProperty( -1 );
-    /**
-     * Y Pos of selected tile.
-     */
-    public static final IntegerProperty FX_SEL_TILE_Y_PROP = new SimpleIntegerProperty( -1 );
+
     /**
      * X offset of tile mouse is over.
      */
@@ -97,6 +96,14 @@ public final class MapPropertiesFX {
      * Y offset of tile mouse is over.
      */
     public static NumberBinding FX_TILE_HOVER_OFF_Y_BIND;
+    /**
+     * Clicked pen and paper cell.
+     */
+    public static final ObjectProperty<IPenAndPaperCell> FX_CLICKED_PPC_PROP = new SimpleObjectProperty<>();
+    /**
+     * Share mouse event.
+     */
+    public static final ObjectProperty<KeyEvent> FX_KEY_EVENT_PROP = new SimpleObjectProperty<>();
 
     static {
 
@@ -112,6 +119,7 @@ public final class MapPropertiesFX {
         FX_TILE_HOVER_OFF_X_BIND = FX_MOUSE_X_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_WEST_PROP ).add( FX_TILE_OFFSET_BIND );
 
         FX_TILE_HOVER_OFF_Y_BIND = FX_MOUSE_Y_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_NORTH_PROP ).add( FX_TILE_OFFSET_BIND );
+
 
     }
 

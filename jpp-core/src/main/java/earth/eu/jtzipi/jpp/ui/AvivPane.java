@@ -18,10 +18,12 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.tile.segment.PathBuilder;
 
-
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,11 +32,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pane above Map pane to display info.
+ *
+ * @author jTzipi
  */
 public class AvivPane extends Pane {
 
@@ -59,7 +63,8 @@ public class AvivPane extends Pane {
      */
     AvivPane( final MapGeoPropVO geoPropertyVO ) {
         this.geoPropVO = geoPropertyVO;
-        clickedFT = new FadeTransition( Duration.millis( 500D ), clicked );
+
+
         setMouseTransparent( true );
         init();
         create();
@@ -75,15 +80,32 @@ public class AvivPane extends Pane {
         geoPropVO.fxDimYProp().addListener( iv -> create() );
         // on tile change
         MapPropertiesFX.FX_TILE_WIDTH_PROP.addListener( iv -> create() );
-        MapPropertiesFX.FX_SEL_TILE_X_PROP.addListener( ( obs, old, newp ) -> onClicked() );
-        MapPropertiesFX.FX_SEL_TILE_Y_PROP.addListener( ( obs, old, newp ) -> onClicked() );
+        MapPropertiesFX.FX_CLICKED_PPC_PROP.addListener( ( obs, cellOld, cellNew ) ->
+                onClicked( cellOld, cellNew )
+        );
+
+
     }
 
-    private void onClicked() {
-        clicked.setLayoutX( MapPropertiesFX.FX_TILE_HOVER_OFF_X_BIND.subtract( 2D ).doubleValue() );
-        clicked.setLayoutY( MapPropertiesFX.FX_TILE_HOVER_OFF_Y_BIND.subtract( 2D ).doubleValue() );
-        clicked.setVisible( true );
-        Logger.getAnonymousLogger().info( "Drucke " + MapPropertiesFX.FX_TILE_HOVER_OFF_X_BIND.doubleValue() );
+
+    private void onClicked( IPenAndPaperCell cellOld, IPenAndPaperCell cellNew ) {
+
+
+        //Logger log = LoggerFactory.getLogger( "Gadi" );
+        //log.error( " " + cellOld + " " + cellNew );
+
+
+        if ( null != cellNew ) {
+            clicked.setLayoutX( MapPropertiesFX.FX_TILE_HOVER_OFF_X_BIND.subtract( 2D ).doubleValue() );
+            clicked.setLayoutY( MapPropertiesFX.FX_TILE_HOVER_OFF_Y_BIND.subtract( 2D ).doubleValue() );
+            clicked.setVisible( true );
+        } else {
+
+
+            clicked.setVisible( false );
+
+        }
+
     }
 
     private void create() {
@@ -135,7 +157,7 @@ public class AvivPane extends Pane {
                 .ly( ps2 ).my( ps1 ).ly( 0D ) // west
                 .build();
 
-        hover.setStroke( Color.RED );
+        hover.setStroke( Color.rgb( 254, 52, 52 ) );
         hover.layoutXProperty().bind( MapPropertiesFX.FX_TILE_HOVER_OFF_X_BIND.subtract( 2D ) );
         hover.layoutYProperty().bind( MapPropertiesFX.FX_TILE_HOVER_OFF_Y_BIND.subtract( 2D ) );
 

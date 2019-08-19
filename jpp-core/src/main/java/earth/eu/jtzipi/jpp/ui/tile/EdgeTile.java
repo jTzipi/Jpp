@@ -208,6 +208,6 @@ public class EdgeTile extends Region {
         t.setStrokeLineJoin( StrokeLineJoin.ROUND );
         t.setStrokeWidth( 1.5D );
 
-        getChildren().setAll( pwe, pww, pws, pwn, tt, t );
+        getChildren().setAll( pwe, pww, pws, pwn, tt );
     }
 }

@@ -15,21 +15,10 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.tile;
+package earth.eu.jtzipi.jpp.ui.tile.segment;
 
-
-import javafx.scene.layout.Region;
-
-public abstract class AbstractTile extends Region {
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Tags are information about something in a cell.
+ */
+public interface ITag {
 }

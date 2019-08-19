@@ -19,6 +19,7 @@ package earth.eu.jtzipi.jpp;
 
 
 import earth.eu.jtzipi.jpp.ui.MainPane;
+import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.PenAndPaperPropertiesFX;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -34,6 +35,8 @@ public final class JPP extends Application {
     public void start( Stage priStage )  {
 
         Scene scene = new Scene( MainPane.create(), PenAndPaperPropertiesFX.WINDOW_WIDTH, PenAndPaperPropertiesFX.WINDOW_HEIGHT);
+
+        scene.setOnKeyTyped( ke -> MapPropertiesFX.FX_KEY_EVENT_PROP.setValue( ke ) );
 
         PenAndPaperPropertiesFX.WINDOW_HEIGHT_PROP_FX.bind( scene.heightProperty() );
         PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.bind( scene.widthProperty() );

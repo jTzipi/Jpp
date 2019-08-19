@@ -24,6 +24,8 @@ import earth.eu.jtzipi.jpp.ui.tile.Tile;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,6 +33,7 @@ import javafx.scene.text.Text;
  */
 public class MapPane extends Pane {
 
+    private static final Logger LOG = LoggerFactory.getLogger( "MapPane" );
     /**
      * Map geo properties .
      */
@@ -58,6 +61,8 @@ public class MapPane extends Pane {
         // on change
         geoPropVO.fxDimXProp().addListener( iv -> createMapPane() );
         geoPropVO.fxDimYProp().addListener( iv -> createMapPane() );
+
+        setOnKeyTyped( ke -> LOG.error( "drücke '" + ke + "'" ) );
     }
 
     /**

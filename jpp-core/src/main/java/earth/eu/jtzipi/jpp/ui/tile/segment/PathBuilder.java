@@ -22,14 +22,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Shape;
 
-public class PathBuilder implements IBuilder<Path> {
-
+public class PathBuilder implements IBuilder<Shape> {
 
     private double lastX;
     private double lastY;
     private Path path;
-
 
     private PathBuilder(  ) {
         this.lastX = 0D;
@@ -37,8 +36,13 @@ public class PathBuilder implements IBuilder<Path> {
         this.path = new Path( new MoveTo( 0D, 0D ) );
     }
 
-    public PathBuilder strokeWidth( final double strokeWidth )
-    {
+    /**
+     * Set width of stroke.
+     *
+     * @param strokeWidth stroke width [0,1]
+     * @return {@code this}
+     */
+    public PathBuilder strokeWidth( final double strokeWidth ) {
         this.path.setStrokeWidth( strokeWidth );
 
         return this;
