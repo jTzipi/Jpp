@@ -57,5 +57,6 @@ public class RoundLabel extends Label {
         setPrefSize( 57,57 );
         setAlignment( Pos.CENTER );
         setText( "Gysi" );
+        
     }
 }

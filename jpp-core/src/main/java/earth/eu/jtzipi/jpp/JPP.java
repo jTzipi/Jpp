@@ -25,7 +25,6 @@ import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -33,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 
 /**
@@ -65,7 +63,7 @@ public final class JPP extends Application {
             System.exit( 1 );
         }
 
-
+        new Thread( iniTask ).start();
         istage.pb.progressProperty().bind( iniTask.progressProperty() );
         istage.infoLab.textProperty().bind( iniTask.messageProperty() );
         istage.start();
@@ -153,8 +151,8 @@ public final class JPP extends Application {
 
         private void init() throws IOException {
 
-            Image splashImage = IO.loadImageFromRes( Paths.get( "SplashImg.png" ) );
-            this.iv = new ImageView( splashImage );
+            //Image splashImage = IO.loadImageFromRes( Paths.get( "SplashImg.png" ) );
+            //this.iv = new ImageView( splashImage );
 
         }
     }
