@@ -42,7 +42,7 @@ public interface ICellQuad extends ICell {
 
     /**
      * Y Coordinate of this tile.
-     * @return
+     * @return ly coordinate
      */
     int getY();
 

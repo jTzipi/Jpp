@@ -18,10 +18,16 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Global Properties of Map.
@@ -61,7 +67,6 @@ public final class MapPropertiesFX {
      * Width of segment.
      */
     public static NumberBinding SEGMENT_WIDTH = FX_TILE_WIDTH_PROP.multiply( ISegment.SEGMENT_WIDTH );
-
     /**
      * North Edge length.
      */
@@ -74,19 +79,35 @@ public final class MapPropertiesFX {
      * Offset left and top of map pane to show legend.
      */
     public static DoubleBinding FX_TILE_OFFSET_BIND;
-
-
-
+    /** Mouse map grid x position.  */
+    public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty( -1 );
+    /** Mouse map grid y position.  */
+    public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty( -1 );
     /**
      * Show edge prop.
      */
-    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty(true);
-    /** Mouse map grid x position.  */
-    public static final IntegerProperty FX_MOUSE_X_PROP = new SimpleIntegerProperty();
-    /** Mouse map grid y position.  */
-    public static final IntegerProperty FX_MOUSE_Y_PROP = new SimpleIntegerProperty();
+    public static final BooleanProperty FX_SHOW_MAP_EDGE_PROP = new SimpleBooleanProperty( true );
+
+    /**
+     * X offset of tile mouse is over.
+     */
+    public static NumberBinding FX_TILE_HOVER_OFF_X_BIND;
+    /**
+     * Y offset of tile mouse is over.
+     */
+    public static NumberBinding FX_TILE_HOVER_OFF_Y_BIND;
+    /**
+     * Clicked pen and paper cell.
+     */
+    public static final ObjectProperty<IPenAndPaperCell> FX_CLICKED_PPC_PROP = new SimpleObjectProperty<>();
+    /**
+     * Share mouse event.
+     */
+    public static final ObjectProperty<KeyEvent> FX_KEY_EVENT_PROP = new SimpleObjectProperty<>();
 
     static {
+
+        // If gap is displayed
         FX_TILE_OFFSET_BIND  = new DoubleBinding() {
             @Override
             protected double computeValue() {
@@ -94,6 +115,12 @@ public final class MapPropertiesFX {
             }
         };
         FX_TILE_WIDTH_PROP.addListener( ( iv ) -> FX_TILE_OFFSET_BIND.invalidate() );
+        //
+        FX_TILE_HOVER_OFF_X_BIND = FX_MOUSE_X_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_WEST_PROP ).add( FX_TILE_OFFSET_BIND );
+
+        FX_TILE_HOVER_OFF_Y_BIND = FX_MOUSE_Y_PROP.multiply( FX_TILE_WIDTH_PROP ).add( FX_GAP_EDGE_NORTH_PROP ).add( FX_TILE_OFFSET_BIND );
+
+
     }
 
 

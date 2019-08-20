@@ -21,36 +21,46 @@ import earth.eu.jtzipi.jpp.ui.tile.Position2D;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 
 import java.util.EnumMap;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * Pen and Paper cell.
+ * @author jTzipi
  */
 public class PenAndPaperCell implements IPenAndPaperCell {
 
-    /** X Position on grid. */
-    int x;
-    /** Y Position on grid. */
-    int y;
-    /** Level of map */
-    int level;
-
-    long idF;
-    long idWN;
-    long idWE;
-    long idWW;
-    long idWS;
-
-    Set<Tag> tagS;
-    EnumMap<Position2D, ICellQuad> neighbourM = new EnumMap<>( Position2D.class );
-
-
     /**
-     * Pen&Paper Cell.
-     * @param cX x
-     * @param cY y
-     * @param level level
+     * Id of wall north .
      */
+    long idWN;
+    /** Id of wall east .*/
+    long idWE;
+    /** Id of wall west .*/
+    long idWW;
+    /** Id of wall south .*/
+    long idWS;
+    /**
+     * X Position on grid.
+     */
+    private int x;
+    /**
+     * Y Position on grid.
+     */
+    private int y;
+    /**
+     * Level of map
+     */
+    private int level;
+    /**
+     * Id of floor
+     */
+    private long idF;
+    private Set<Tag> tagS;
+    private EnumMap<Position2D, ICellQuad> neighbourM = new EnumMap<>( Position2D.class );
+
+
+
     private PenAndPaperCell( final int cX,
                              final int cY,
                              final int level,
@@ -67,7 +77,7 @@ public class PenAndPaperCell implements IPenAndPaperCell {
         this.idWW = idWallWest;
         this.idWS = idWallSouth;
         this.idF = idFloor;
-    this.tagS = tagSet;
+        this.tagS = tagSet;
     }
 
     /**
@@ -79,9 +89,11 @@ public class PenAndPaperCell implements IPenAndPaperCell {
      * @throws IllegalArgumentException
      */
     public static PenAndPaperCell ofEmpty( final int cX, final int cY, final int level ) {
-        if( 0 > cX || 0 > cY ) {
-
+        // position wrong
+        if ( 0 > cX || 0 > cY ) {
+            throw new IllegalArgumentException( "cell x[="+cX+"] or y[="+cY+"] < 0" );
         }
+
         long id = Wall.WallSegments.NONE.getId();
 
         return new PenAndPaperCell( cX, cY, level, id, id, id, id, id, null );
@@ -95,6 +107,11 @@ public class PenAndPaperCell implements IPenAndPaperCell {
      * @return
      */
     public static PenAndPaperCell ofSolid( final int cX, final int cY, final int level ) {
+        // position wrong
+        if ( 0 > cX || 0 > cY ) {
+            throw new IllegalArgumentException( "cell x[="+cX+"] or y[="+cY+"] < 0" );
+        }
+
         long id = Wall.WallSegments.SOLID.getId();
 
         return new PenAndPaperCell( cX, cY, level, id, id, id, id, id, null );
@@ -163,8 +180,6 @@ public class PenAndPaperCell implements IPenAndPaperCell {
     }
 
     // Segment
-
-
     @Override
     public long getIdWallNorth() {
         return idWN;
@@ -193,5 +208,29 @@ public class PenAndPaperCell implements IPenAndPaperCell {
     @Override
     public Set<Tag> getTagSet() {
         return tagS;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( getX(), getY(), getLevel() );
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        PenAndPaperCell that = ( PenAndPaperCell ) o;
+        return getX() == that.getX() &&
+                getY() == that.getY() &&
+                getLevel() == that.getLevel();
+    }
+
+    @Override
+    public String toString() {
+        return "PenAndPaperCell{" +
+                "x=" + x +
+                ", y=" + y +
+                ", level=" + level +
+                '}';
     }
 }

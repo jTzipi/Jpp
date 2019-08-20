@@ -15,48 +15,15 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.cell;
+package earth.eu.jtzipi.jpp.map.event;
+
+import javafx.event.ActionEvent;
 
 
-import java.util.Set;
-
-public interface IPenAndPaperCell extends ICellQuad {
+public class TileEvent extends ActionEvent {
 
 
-    /**
-     * Default level.
-     */
-    int LEVEL_DEFAULT = 0;
-
-        /**
-         * Level of tile.
-         * <p>
-         *     Level below 0 should be level beneath earth.
-         * </p>
-         * @return level
-         */
-    int getLevel();
-
-    long getIdWallNorth();
-
-    long getIdWallEast();
-
-    long getIdWallWest();
-
-    long getIdWallSouth();
-
-    long getIdFloor();
-
-
-    Set<Tag> getTagSet();
-
-    interface Tag {
-
-
-
+    public enum Type {
+        MOVE_LEFT;
     }
-
-
-
-
 }

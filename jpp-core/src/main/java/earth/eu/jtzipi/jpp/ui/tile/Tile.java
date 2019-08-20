@@ -18,21 +18,34 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 
+import earth.eu.jtzipi.jpp.cell.ICellQuad;
 import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
+
+import earth.eu.jtzipi.jpp.ui.tile.segment.ITag;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Insets;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
 
@@ -51,15 +64,12 @@ import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
 public class Tile extends Region {
 
 
-
     /*
     public enum Dir2D {
         N,
         E,
         W,
         S;
-
-
     } */
 
     final IPenAndPaperCell ppc;
@@ -69,8 +79,15 @@ public class Tile extends Region {
     /**
      * Neighbour tiles.
      */
+    // Default background
 
+    private static Background bgOver;
+    /**
+     *
+     */
+    private static Color colBGMouseover = Color.rgb( 27, 27, 254, 0.5D );
 
+    private static BackgroundFill bgFillMouseover = new BackgroundFill( colBGMouseover, new CornerRadii( 15D ), new Insets( 2D ) );
 
     /**
      * Tile complete constructor.
@@ -78,15 +95,17 @@ public class Tile extends Region {
      * @param ppc pen and paper cell
      *
      */
-    Tile( IPenAndPaperCell ppc ) {
+    Tile( final IPenAndPaperCell ppc ) {
         this.ppc = ppc;
-        //this.y = y;
 
-         // Maup;
+        this.bgOver = new Background( bgFillMouseover );
+
+        // Maup;
         // init code
+
         create();   // create all parts
         draw();     // draw
-
+        //setBackground( bg );
         LoggerFactory.getLogger( "Tile" ).error( "Gysi" );
     }
 
@@ -101,7 +120,12 @@ public class Tile extends Region {
         this( PenAndPaperCell.ofEmpty( x, y, level ) );
     }
 
-
+    /**
+     * Create a new tile without content.
+     * @param x pos x
+     * @param y pos y
+     * @return tile without content
+     */
     public static Tile of( final int x, final int y ) {
         if ( 0 > x || 0 > y ) {
 
@@ -112,9 +136,6 @@ public class Tile extends Region {
     }
 
     public static Tile solid( int x, int y ) {
-
-
-
 
         return new Tile( PenAndPaperCell.ofSolid( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
     }
@@ -155,19 +176,40 @@ public class Tile extends Region {
         setOnMouseEntered( me -> onMouseEntered() ); // me -> aviP.setVisible( true )
         setOnMouseExited( me -> onMouseOff() );
 
+        setOnMouseClicked( me -> {
+            //MapPropertiesFX.FX_MOUSE_EVENT_PROP.setValue( me );
+            onMouseClicked();
+        } );
+
+        // Add key listener
+        MapPropertiesFX.FX_KEY_EVENT_PROP.addListener( ( obs, keOld, ke ) -> onKeyTyped( ke ) );
+
         //getChildren().addAll( baseP, aviP );
 
+
+        setBackground( Background.EMPTY );
     }
 
     private void onMouseEntered() {
         MapPropertiesFX.FX_MOUSE_X_PROP.setValue( ppc.getX() );
         MapPropertiesFX.FX_MOUSE_Y_PROP.setValue( ppc.getY() );
+        //setBackground( bgOver );
+
         System.out.println( "tile on " + ppc.getX() + " " + ppc.getY() );
     }
 
     private void onMouseOff() {
-        //MapPropertiesFX.FX_MOUSE_Y_PROP.setValue( ppc.getY() );
+
+        //setBackground( bg );
         System.out.println( "tile off " + ppc.getX() + " " + ppc.getY() );
+    }
+
+    private void onMouseClicked() {
+
+        IPenAndPaperCell lastClicked = MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue();
+        MapPropertiesFX.FX_CLICKED_PPC_PROP.setValue( ppc == lastClicked ? null : ppc );
+
+        System.out.println( "click '" + ppc.getX() + " " + ppc.getY() );
     }
 
     private void draw() {
@@ -207,6 +249,14 @@ public class Tile extends Region {
 
     }
 
+    private void onKeyTyped( KeyEvent keyEvent ) {
+        //System.out.println( "Type " + keyEvent );
+        if ( MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue() == null ) {
+            System.out.println( "Kein aktives tile" );
+            return;
+        }
+    }
+
     private Collection<? extends Shape> createTile() {
                 // segment size
 
@@ -238,10 +288,20 @@ public class Tile extends Region {
         return segL;
     }
 
+    /**
+     *
+     */
+    public static final class Segments {
 
-    public static class Floor {
+        // Tags of this tile
+        Set<ITag> tagS;
+        // Walls of this tile
+        long idWallN;
+        long idWallE;
+        long idWallW;
+        long idWallS;
 
-        public static final Floor FLOOR_EMPTY = new Floor();
 
     }
+
 }

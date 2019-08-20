@@ -17,18 +17,27 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
+import earth.eu.jtzipi.jpp.cell.ICellQuad;
+import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
+import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.ui.tile.Tile;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Placeholder for geometry related properties of map .
  */
 public final class MapGeoPropVO {
+    private static final Set<KeyCode> KEY_CODE = new HashSet<>();
 
 
     private static final String FX_PROP_PANE_WIDTH = "FX_PROP_PANE_WIDTH";
@@ -69,6 +78,10 @@ public final class MapGeoPropVO {
      */
     private IPenAndPaperMap ppMap;
 
+    static {
+        KEY_CODE.add( KeyCode.LEFT );
+    }
+
     private MapGeoPropVO( IPenAndPaperMap penAndPaperMap ) {
         this.ppMap = penAndPaperMap;
     }
@@ -107,6 +120,8 @@ public final class MapGeoPropVO {
 
         this.fxOffsetXBinding = bindOffset.add( gapWest );
         this.fxOffsetYBinding = bindOffset.add( gapNorth );
+
+        MapPropertiesFX.FX_KEY_EVENT_PROP.addListener( ( o, ok, nk ) -> onKeyTyped( ok, nk ) );
     }
 
     /**
@@ -138,5 +153,35 @@ public final class MapGeoPropVO {
         return this.fxOffsetYBinding;
     }
 
+    ICellQuad getNeighbour( ICellQuad cell, Position2D pos2D ) {
+        Objects.requireNonNull( cell );
+        int posX = cell.getX();
+        int posY = cell.getY();
+        switch ( pos2D ) {
+            case E:
+                posX++;
+                break;
+            case W:
+                posX--;
+                break;
+            case S:
+                posY--;
+                break;
+            case N:
+                posY++;
+                break;
 
+
+        }
+
+        return ppMap.isCell( posX, posY ) ? ppMap.getCell( posX, posY ) : ICellQuad.UnknownCell.SINGLETON;
+    }
+
+    private void onKeyTyped( KeyEvent oldKeyEv, KeyEvent kevNew ) {
+
+        if ( KEY_CODE.contains( kevNew.getCode() ) ) {
+
+        }
+
+    }
 }
