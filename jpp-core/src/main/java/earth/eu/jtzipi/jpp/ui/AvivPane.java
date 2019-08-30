@@ -18,22 +18,22 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import earth.eu.jtzipi.jpp.ui.tile.segment.PathBuilder;
-
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
-import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
+import javafx.scene.transform.Transform;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 
 /**
  * Pane above Map pane to display info.
@@ -54,6 +54,9 @@ public class AvivPane extends Pane {
 
     private Shape hover;    // Shape to indicate hover position
     private Shape clicked;  // Shape to indicate clicked position
+    private EnumMap<PenAndPaperPos, Shape> overflowEMap; // Shape displaying a zigzag line to indicte overflow of scroll pane
+
+
     private FadeTransition clickedFT;
 
     /**
@@ -87,8 +90,59 @@ public class AvivPane extends Pane {
 
     }
 
+    private static Shape createOverflow( PenAndPaperPos pp, int pike, double fenceHeight ) {
 
-    private void onClicked( IPenAndPaperCell cellOld, IPenAndPaperCell cellNew ) {
+        // create a new empty path starting [0,0]
+        PathBuilder pb = PathBuilder.create();
+
+        double fence = 25D; // fence distance
+        double step = 24D;  // step distance
+        //  fence height
+        pb.lx( fenceHeight );
+
+        // about 2400 pixel
+        for ( int i = 0; i < pike; i++ ) {
+
+            double x = i % 2 == 0 ? fenceHeight + fence : fenceHeight;
+            double ym = i * step;
+
+            pb.lxy( x, ym );
+        }
+        pb.lx( 0D );
+        pb.ly( 0D );
+        pb.close();
+        Shape raw = pb.build();
+        // transform for position
+        List<Transform> tL = new ArrayList<>();
+
+        switch ( pp ) {
+            // east we have to rotate and translate
+            case E:
+                //tL.add( Transform.rotate( 180D, 0D, 500D ) );
+                tL.add( Transform.translate( 280D, 100D ) );
+                raw.setFill( Color.RED );
+                break;
+            case S:
+
+                tL.add( Transform.translate( 180D, 500D ) );
+
+                break;
+            case N:
+                //tL.add( Transform.rotate( 90D, 0D, 0D ) );
+                break;
+            default:
+                ;
+        }
+        // if transformation
+        if ( !tL.isEmpty() ) {
+            raw.getTransforms().addAll( tL );
+        }
+
+
+        return raw;
+    }
+
+    private void onClicked( ICellPenAndPaper cellOld, ICellPenAndPaper cellNew ) {
 
 
         //Logger log = LoggerFactory.getLogger( "Gadi" );
@@ -184,8 +238,10 @@ public class AvivPane extends Pane {
 //
         getChildren().add( hover );
         getChildren().add( clicked );
+        getChildren().add( createOverflow( PenAndPaperPos.S, 50, 55D ) );
+        getChildren().add( createOverflow( PenAndPaperPos.N, 50, 55D ) );
+        getChildren().add( createOverflow( PenAndPaperPos.E, 50, 55D ) );
     }
-
     /**
      * Return grid Color property.
      *

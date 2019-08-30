@@ -20,20 +20,34 @@ package earth.eu.jtzipi.jpp.ui.tile;
 /**
  * 2D Position.
  */
-public enum Position2D {
+public enum PenAndPaperPos {
 
     /**
      * North.
      */
     N( "North" ),
-
+    /**
+     * East.
+     */
     E( "East"),
+    /**
+     * Center.
+     */
     C( "Center" ),
+    U( "Up" ),
+    D( "Down" ),
+    /**
+     * West.
+     */
     W( "West"),
+    /**
+     * South.
+     */
     S( "South");
 
     private final String dn;
-    Position2D( final String str ) {
+
+    PenAndPaperPos( final String str ) {
         this.dn = str;
     }
 }

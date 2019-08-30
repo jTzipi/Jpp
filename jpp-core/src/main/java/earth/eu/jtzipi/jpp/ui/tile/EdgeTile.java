@@ -21,19 +21,20 @@ package earth.eu.jtzipi.jpp.ui.tile;
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import earth.eu.jtzipi.jpp.util.FXUtils;
-import javafx.animation.*;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
-import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 /**
@@ -43,7 +44,7 @@ import javafx.util.Duration;
  */
 public class EdgeTile extends Region {
 
-    Position2D p2D; // Position
+    PenAndPaperPos p2D; // Position
     int idx;        // index of this edge
 
     Shape pwn;  // path wall north
@@ -67,11 +68,11 @@ public class EdgeTile extends Region {
     Background bgMOver = FXUtils.createColorBG( mouseOverCol );
     /**
      * Edge Tile.
-     * @param position2D position
+     * @param penAndPaperPos position
      * @param index index
      */
-    EdgeTile( final Position2D position2D, final int index ) {
-        this.p2D = position2D;
+    EdgeTile( final PenAndPaperPos penAndPaperPos, final int index ) {
+        this.p2D = penAndPaperPos;
         this.idx = index;
         this.tt = new Text();
         init();
@@ -86,7 +87,7 @@ public class EdgeTile extends Region {
      * @param index index
      * @return
      */
-    public static EdgeTile of( Position2D pos2D, final int index )  {
+    public static EdgeTile of( PenAndPaperPos pos2D, final int index ) {
 
         return new EdgeTile( pos2D, index );
     }
@@ -182,17 +183,18 @@ public class EdgeTile extends Region {
         switch ( p2D ) {
             case E:
             case W:
-                 pwn = w.toPath( Position2D.N );
-                 pwe = w.toPath( Position2D.E );
-                 pww = we.toPath( Position2D.W );
-                 pws = w.toPath( Position2D.S );
+                pwn = w.toPath( PenAndPaperPos.N );
+                pwe = w.toPath( PenAndPaperPos.E );
+                pww = we.toPath( PenAndPaperPos.W );
+                pws = w.toPath( PenAndPaperPos.S );
                 break;
             case S:
             case N:
-                 pwn = we.toPath( Position2D.N );
-                 pwe = w.toPath( Position2D.E );
-                 pww = w.toPath( Position2D.W );
-                 pws = w.toPath( Position2D.S );break;
+                pwn = we.toPath( PenAndPaperPos.N );
+                pwe = w.toPath( PenAndPaperPos.E );
+                pww = w.toPath( PenAndPaperPos.W );
+                pws = w.toPath( PenAndPaperPos.S );
+                break;
         }
 
 

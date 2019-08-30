@@ -18,7 +18,7 @@
 package earth.eu.jtzipi.jpp.ui;
 
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Pane;
 
@@ -26,12 +26,12 @@ import javafx.scene.layout.Pane;
 public class MapEdgePane extends Pane {
 
     private MapGeoPropVO geoPropVO;     // geo prop vo
-    private Position2D p2D;             // position
+    private PenAndPaperPos p2D;             // position
 
     /**
      * @param mapProp
      */
-    MapEdgePane( final MapGeoPropVO mapProp, final Position2D pos2D ) {
+    MapEdgePane( final MapGeoPropVO mapProp, final PenAndPaperPos pos2D ) {
         this.geoPropVO = mapProp;
         this.p2D = pos2D;
         init();
@@ -40,12 +40,12 @@ public class MapEdgePane extends Pane {
 
     public static final MapEdgePane westEdge( final MapGeoPropVO mapProp ) {
 
-        return new MapEdgePane( mapProp, Position2D.W );
+        return new MapEdgePane( mapProp, PenAndPaperPos.W );
     }
 
     public static final MapEdgePane northEdge( final MapGeoPropVO mapProp ) {
 
-        return new MapEdgePane( mapProp, Position2D.N );
+        return new MapEdgePane( mapProp, PenAndPaperPos.N );
     }
 
     private void init() {

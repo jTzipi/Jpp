@@ -18,7 +18,7 @@
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -91,7 +91,7 @@ public class Wall  {
     }
     /**
      * Return a solid wall.
-     *  pos2D position ( if null {@linkplain Position2D#E})
+     *  pos2D position ( if null {@linkplain PenAndPaperPos#E})
      * @return solid wall
      */
     public static Wall solid(  ) {
@@ -135,7 +135,7 @@ public class Wall  {
      * @return Path
      * @throws NullPointerException
      */
-    public Shape toPath( Position2D p2D ) {
+    public Shape toPath( PenAndPaperPos p2D ) {
         Objects.requireNonNull(p2D);
 
         Shape path = ws.createPath();

@@ -17,21 +17,22 @@
 
 package earth.eu.jtzipi.jpp.ui;
 
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 import earth.eu.jtzipi.jpp.cell.ICellQuad;
-import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
 import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
-import earth.eu.jtzipi.jpp.ui.tile.Tile;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.*;
-import javafx.geometry.Point2D;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Placeholder for geometry related properties of map .
@@ -77,6 +78,11 @@ public final class MapGeoPropVO {
      * content of map.
      */
     private IPenAndPaperMap ppMap;
+    private ObservableMap<ICellPenAndPaper, PenAndPaperPos> hlPPM = FXCollections.observableHashMap();
+    private PenAndPaperPos sel;
+
+    private DoubleProperty fxWestOverflowProp;
+    private DoubleProperty fxEastOverflowProp;
 
     static {
         KEY_CODE.add( KeyCode.LEFT );
@@ -121,6 +127,10 @@ public final class MapGeoPropVO {
         this.fxOffsetXBinding = bindOffset.add( gapWest );
         this.fxOffsetYBinding = bindOffset.add( gapNorth );
 
+        MapPropertiesFX.FX_CLICKED_PPC_PROP.addListener( ( obs, oldPPC, newPPC ) -> {
+            hlPPM.put( newPPC, PenAndPaperPos.C );
+        } );
+
         MapPropertiesFX.FX_KEY_EVENT_PROP.addListener( ( o, ok, nk ) -> onKeyTyped( ok, nk ) );
     }
 
@@ -153,7 +163,11 @@ public final class MapGeoPropVO {
         return this.fxOffsetYBinding;
     }
 
-    ICellQuad getNeighbour( ICellQuad cell, Position2D pos2D ) {
+    DoubleProperty fxEastOverflowProp() {
+        return this.fxEastOverflowProp;
+    }
+
+    ICellQuad getNeighbour( ICellQuad cell, PenAndPaperPos pos2D ) {
         Objects.requireNonNull( cell );
         int posX = cell.getX();
         int posY = cell.getY();
@@ -179,7 +193,18 @@ public final class MapGeoPropVO {
 
     private void onKeyTyped( KeyEvent oldKeyEv, KeyEvent kevNew ) {
 
-        if ( KEY_CODE.contains( kevNew.getCode() ) ) {
+
+        KeyCode kcode = kevNew.getCode();
+        if ( KEY_CODE.contains( kcode ) ) {
+
+            switch ( kcode ) {
+                case LEFT:
+                    // go left from this ppc
+                    if ( PenAndPaperPos.W == sel ) {
+                        // set new selected ppc
+
+                    }
+            }
 
         }
 

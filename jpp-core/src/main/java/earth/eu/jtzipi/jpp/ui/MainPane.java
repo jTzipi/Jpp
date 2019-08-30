@@ -20,14 +20,7 @@ package earth.eu.jtzipi.jpp.ui;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import earth.eu.jtzipi.jpp.IO;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperRealm;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
-import earth.eu.jtzipi.jpp.map.MapToTree;
-import earth.eu.jtzipi.jpp.ui.map.PenAndPaperLevelMap;
-import earth.eu.jtzipi.jpp.ui.map.PenAndPaperRealm;
-import earth.eu.jtzipi.jpp.ui.map.PenAndPaperSite;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.map.*;
 import earth.eu.jtzipi.jpp.ui.tree.ITreeNodeInfo;
 import earth.eu.jtzipi.jpp.ui.tree.TreeNodeInfoCell;
 import javafx.beans.binding.NumberBinding;
@@ -37,7 +30,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +63,8 @@ public final class MainPane extends Pane {
     private NumberBinding mainPanePrefWidthBind;
     private NumberBinding mainPanePrefHeightBind;
 
-
+    private ScrollPane sp;
+    private MapGeoPropVO mapGeo;
     /**
      * MainPane.
      */
@@ -141,10 +134,15 @@ public final class MainPane extends Pane {
         StackPane map = new StackPane( mapP, aviP );
 
         // Scrollpane for map pane
-        ScrollPane mapSPane = new ScrollPane( map );
-        mapSPane.setPannable( true );
-        mapSPane.prefWidthProperty().bind( mainPanePrefWidthBind );
-        mapSPane.prefHeightProperty().bind( mainPanePrefHeightBind );
+        sp = new ScrollPane( map );
+        sp.setPannable( true );
+        sp.prefWidthProperty().bind( mainPanePrefWidthBind );
+        sp.prefHeightProperty().bind( mainPanePrefHeightBind );
+        MapPropertiesFX.FX_MAP_PANE_VIEWPORT_BOUNDS_PROP.bind( sp.viewportBoundsProperty() );
+
+
+        sp.hvalueProperty().addListener( ( obs, ivo, ivn ) -> System.out.println( "" + ( ivn.doubleValue() * ( mapP.getPrefWidth() - sp.getViewportBounds().getWidth() ) ) ) );
+
 
 
         // main pane
@@ -152,7 +150,7 @@ public final class MainPane extends Pane {
         //mainPane.setPrefSize( 700D, 700D );
         mainPane.prefWidthProperty().bind( mainPanePrefWidthBind );
         mainPane.prefHeightProperty().bind( mainPanePrefHeightBind );
-        mainPane.setCenter( mapSPane );
+        mainPane.setCenter( sp );
         mainPane.setTop( toolBar );
         mainPane.setBottom( statusBar );
 
@@ -172,6 +170,7 @@ public final class MainPane extends Pane {
 
         getChildren().setAll( mainPane );
     }
+
 
     private IPenAndPaperRealm createRealm() {
 

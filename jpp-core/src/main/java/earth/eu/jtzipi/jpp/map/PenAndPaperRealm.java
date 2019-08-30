@@ -15,11 +15,7 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.map;
-
-import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperRealm;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
+package earth.eu.jtzipi.jpp.map;
 
 import java.util.ArrayList;
 import java.util.List;

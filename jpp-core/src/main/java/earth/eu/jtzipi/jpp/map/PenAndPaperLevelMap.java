@@ -15,10 +15,9 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.map;
+package earth.eu.jtzipi.jpp.map;
 
-import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +44,14 @@ public class PenAndPaperLevelMap implements IPenAndPaperMap {
     /** level .*/
     int level;
     /** tiles. */
-    List<List<IPenAndPaperCell>> map;
+    List<List<ICellPenAndPaper>> map;
 
     /**
      *
-     * @param dimX
-     * @param dimY
-     * @param level
-     * @param name
+     * @param dimX dim x
+     * @param dimY dim y
+     * @param level level
+     * @param name name
      */
     PenAndPaperLevelMap( int dimX, int dimY, int level, String name ) {
         this.dimX = dimX;
@@ -106,7 +105,7 @@ public class PenAndPaperLevelMap implements IPenAndPaperMap {
     }
 
     @Override
-    public IPenAndPaperCell getCell( int x, int y ) {
+    public ICellPenAndPaper getCell( int x, int y ) {
 
         if( x < 0 || map.size() <= x ) {
 
@@ -119,7 +118,7 @@ public class PenAndPaperLevelMap implements IPenAndPaperMap {
     }
 
     @Override
-    public List<IPenAndPaperCell> getCells() {
+    public List<ICellPenAndPaper> getCells() {
         return map.stream().flatMap( list -> list.stream() ).collect( toList() );
     }
 }

@@ -18,11 +18,9 @@
 package earth.eu.jtzipi.jpp.ui.tile;
 
 
-import earth.eu.jtzipi.jpp.cell.ICellQuad;
-import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 import earth.eu.jtzipi.jpp.cell.PenAndPaperCell;
 import earth.eu.jtzipi.jpp.ui.MapPropertiesFX;
-
 import earth.eu.jtzipi.jpp.ui.tile.segment.ITag;
 import earth.eu.jtzipi.jpp.ui.tile.segment.Wall;
 import javafx.beans.binding.NumberBinding;
@@ -37,17 +35,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
+import static earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos.*;
 
 /**
  * A tile is a square cell on a pan & paper map.
@@ -55,7 +50,7 @@ import static earth.eu.jtzipi.jpp.ui.tile.Position2D.*;
  *
  *     This is the visual part of the square. It is responsible for drawing all
  *     "items" containing. Like walls ,switches or treasures.
- *     Its content relies on a {@linkplain IPenAndPaperCell} cell.
+ *     Its content relies on a {@linkplain earth.eu.jtzipi.jpp.cell.ICellQuad} cell.
  *
  * </p>
  *
@@ -72,16 +67,16 @@ public class Tile extends Region {
         S;
     } */
 
-    final IPenAndPaperCell ppc;
+    final ICellPenAndPaper ppc;
+    private Segments seg;
     //Pane baseP;
     //Pane aviP;
 
     /**
      * Neighbour tiles.
      */
-    // Default background
 
-    private static Background bgOver;
+
     /**
      *
      */
@@ -95,10 +90,10 @@ public class Tile extends Region {
      * @param ppc pen and paper cell
      *
      */
-    Tile( final IPenAndPaperCell ppc ) {
+    Tile( final ICellPenAndPaper ppc ) {
         this.ppc = ppc;
+        this.seg = new Segments();
 
-        this.bgOver = new Background( bgFillMouseover );
 
         // Maup;
         // init code
@@ -109,16 +104,7 @@ public class Tile extends Region {
         LoggerFactory.getLogger( "Tile" ).error( "Gysi" );
     }
 
-    /**
-     * Tile.
-     *
-     * @param x     pos x
-     * @param y     pos y
-     * @param level leve
-     */
-    Tile( int x, int y, int level ) {
-        this( PenAndPaperCell.ofEmpty( x, y, level ) );
-    }
+
 
     /**
      * Create a new tile without content.
@@ -132,12 +118,7 @@ public class Tile extends Region {
 
         }
 
-        return new Tile( x, y, IPenAndPaperCell.LEVEL_DEFAULT );
-    }
-
-    public static Tile solid( int x, int y ) {
-
-        return new Tile( PenAndPaperCell.ofSolid( x, y, IPenAndPaperCell.LEVEL_DEFAULT ) );
+        return new Tile( PenAndPaperCell.of( x, y ) );
     }
 
     private void create() {
@@ -206,7 +187,7 @@ public class Tile extends Region {
 
     private void onMouseClicked() {
 
-        IPenAndPaperCell lastClicked = MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue();
+        ICellPenAndPaper lastClicked = MapPropertiesFX.FX_CLICKED_PPC_PROP.getValue();
         MapPropertiesFX.FX_CLICKED_PPC_PROP.setValue( ppc == lastClicked ? null : ppc );
 
         System.out.println( "click '" + ppc.getX() + " " + ppc.getY() );
@@ -264,10 +245,10 @@ public class Tile extends Region {
 
         List<Shape> segL = new ArrayList<>();
 
-        Shape wW = Wall.ofId( ppc.getIdWallWest() ).toPath( W );
-        Shape eW = Wall.ofId( ppc.getIdWallEast() ).toPath( E );
-        Shape sW = Wall.ofId( ppc.getIdWallSouth() ).toPath( S );
-        Shape nW = Wall.ofId( ppc.getIdWallNorth() ).toPath( N );
+        Shape wW = Wall.ofId( seg.idWallW ).toPath( W );
+        Shape eW = Wall.ofId( seg.idWallE ).toPath( E );
+        Shape sW = Wall.ofId( seg.idWallS ).toPath( S );
+        Shape nW = Wall.ofId( seg.idWallN ).toPath( N );
 
         // System.out.println( "Shape " + wW + " " + eW );
 
@@ -291,15 +272,17 @@ public class Tile extends Region {
     /**
      *
      */
-    public static final class Segments {
+    private static final class Segments {
 
+        List<PenAndPaperPos> activePosL;
+        PenAndPaperPos lastActivePos;
         // Tags of this tile
         Set<ITag> tagS;
         // Walls of this tile
-        long idWallN;
-        long idWallE;
-        long idWallW;
-        long idWallS;
+        long idWallN = 0;
+        long idWallE = 0;
+        long idWallW = 0;
+        long idWallS = 0;
 
 
     }

@@ -18,16 +18,13 @@
 package earth.eu.jtzipi.jpp.ui;
 
 
-import earth.eu.jtzipi.jpp.cell.IPenAndPaperCell;
-import earth.eu.jtzipi.jpp.ui.tile.Tile;
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
-import javafx.geometry.Point2D;
+import javafx.geometry.Bounds;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 
 /**
  * Global Properties of Map.
@@ -96,10 +93,12 @@ public final class MapPropertiesFX {
      * Y offset of tile mouse is over.
      */
     public static NumberBinding FX_TILE_HOVER_OFF_Y_BIND;
+
+    public static final ObjectProperty<Bounds> FX_MAP_PANE_VIEWPORT_BOUNDS_PROP = new SimpleObjectProperty<>();
     /**
      * Clicked pen and paper cell.
      */
-    public static final ObjectProperty<IPenAndPaperCell> FX_CLICKED_PPC_PROP = new SimpleObjectProperty<>();
+    public static final ObjectProperty<ICellPenAndPaper> FX_CLICKED_PPC_PROP = new SimpleObjectProperty<>();
     /**
      * Share mouse event.
      */

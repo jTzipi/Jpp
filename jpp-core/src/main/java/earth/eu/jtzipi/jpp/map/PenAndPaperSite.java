@@ -15,16 +15,15 @@
  *
  */
 
-package earth.eu.jtzipi.jpp.ui.map;
-
-import earth.eu.jtzipi.jpp.map.IPenAndPaperMap;
-import earth.eu.jtzipi.jpp.map.IPenAndPaperSite;
+package earth.eu.jtzipi.jpp.map;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * @author jTzipi
+ */
 public class PenAndPaperSite implements IPenAndPaperSite {
 
     private String name;

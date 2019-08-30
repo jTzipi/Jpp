@@ -19,9 +19,8 @@ package earth.eu.jtzipi.jpp.ui;
 
 
 import earth.eu.jtzipi.jpp.ui.tile.EdgeTile;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import earth.eu.jtzipi.jpp.ui.tile.Tile;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
@@ -62,6 +61,9 @@ public class MapPane extends Pane {
         geoPropVO.fxDimXProp().addListener( iv -> createMapPane() );
         geoPropVO.fxDimYProp().addListener( iv -> createMapPane() );
 
+        //boundsInParentProperty().addListener( iv -> System.out.println( iv ) );
+        //boundsInLocalProperty().addListener( iv -> System.out.println( iv ) );
+
         setOnKeyTyped( ke -> LOG.error( "drücke '" + ke + "'" ) );
     }
 
@@ -75,11 +77,11 @@ public class MapPane extends Pane {
         int yt = geoPropVO.fxDimYProp().intValue();
 
         for ( int i = 0; i < xt; i++ ) {
-            getChildren().add( EdgeTile.of( Position2D.N, i ) );
+            getChildren().add( EdgeTile.of( PenAndPaperPos.N, i ) );
         }
 
         for ( int iy = 0; iy < yt; iy++ ) {
-            getChildren().add( EdgeTile.of( Position2D.W, iy ) );
+            getChildren().add( EdgeTile.of( PenAndPaperPos.W, iy ) );
         }
         // all tile dim x
         for ( int i = 0; i < xt; i++ ) {

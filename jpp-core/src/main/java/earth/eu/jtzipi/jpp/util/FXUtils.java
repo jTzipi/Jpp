@@ -29,9 +29,12 @@ import javafx.scene.paint.Color;
  */
 public final class FXUtils {
 
+
     public static final Insets INSETS_2PX = new Insets( 2D );
 
+    // No Instance
     private FXUtils() { throw new AssertionError(); }
+
 
     public static Background createColorBG( Color color ) {
         return new Background( new BackgroundFill( color, CornerRadii.EMPTY, Insets.EMPTY ) );
@@ -40,6 +43,7 @@ public final class FXUtils {
     public static Background bgOf( Color color, double radii, Insets insets ) {
         return new Background( new BackgroundFill( color, new CornerRadii( radii ), insets ) );
     }
+
 
     /**
      * Test whether {@code node} has a preferred width {@literal > 0}.

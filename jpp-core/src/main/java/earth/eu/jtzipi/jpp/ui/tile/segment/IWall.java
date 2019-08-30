@@ -17,13 +17,7 @@
 
 package earth.eu.jtzipi.jpp.ui.tile.segment;
 
-import earth.eu.jtzipi.jpp.IBuilder;
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
-import javafx.geometry.Pos;
-import javafx.scene.shape.Path;
-
-import java.util.ArrayList;
-import java.util.List;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 
 /**
  * A WallSegments is a custom segment.
@@ -47,7 +41,7 @@ public interface IWall {
      * @param pos2D position
      * @return {@code this}
      */
-    IWall pos( Position2D pos2D );
+    IWall pos( PenAndPaperPos pos2D );
 
     /**
      * Type of wall.

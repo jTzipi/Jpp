@@ -16,7 +16,7 @@
  */
 package earth.eu.jtzipi.jpp.cell;
 
-import earth.eu.jtzipi.jpp.ui.tile.Position2D;
+import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 
 import java.util.Collections;
 import java.util.Set;
@@ -24,10 +24,9 @@ import java.util.Set;
 /**
  * A quadratic cell used for 2D grids.
  *
- * @author langhammer
+ * @author jTzipi
  */
 public interface ICellQuad extends ICell {
-
 
     /**
      * A coordinate undefined .
@@ -49,19 +48,19 @@ public interface ICellQuad extends ICell {
     /**
      * Return the neighbour if present.
      *
-     * @param position2D direction
+     * @param penAndPaperPos direction
      * @return neighbour or {@linkplain UnknownCell}
      */
-    ICellQuad getNeighbour( Position2D position2D );
+    ICellQuad getNeighbour( PenAndPaperPos penAndPaperPos );
 
     /**
      * See if this cell has a neighbour.
      *
-     * @param position2D direction
+     * @param penAndPaperPos direction
      * @return {@code true} if a neighbour is present
      */
-    default boolean isNeighbour( Position2D position2D ) {
-        return getNeighbour( position2D ) != UnknownCell.SINGLETON;
+    default boolean isNeighbour( PenAndPaperPos penAndPaperPos ) {
+        return getNeighbour( penAndPaperPos ) != UnknownCell.SINGLETON;
     }
 
     /**
@@ -118,7 +117,7 @@ public interface ICellQuad extends ICell {
         }
 
         @Override
-        public ICellQuad getNeighbour( Position2D position2D ) {
+        public ICellQuad getNeighbour( PenAndPaperPos penAndPaperPos ) {
             return null;
         }
 

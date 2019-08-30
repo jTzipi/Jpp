@@ -16,8 +16,7 @@
  */
 package earth.eu.jtzipi.jpp.map;
 
-import earth.eu.jtzipi.jpp.cell.ICellQuad;
-
+import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 
 import java.util.List;
 
@@ -82,7 +81,7 @@ public interface IPenAndPaperMap {
      * @param y y
      * @return cell for location if found
      */
-    ICellQuad getCell( int x, int y );
+    ICellPenAndPaper getCell( int x, int y );
 
     /**
      * Is cell defined for [x,y].
@@ -98,5 +97,5 @@ public interface IPenAndPaperMap {
      * Cells of this map.
      * @return cell list
      */
-    List<ICellQuad> getCells();
+    List<ICellPenAndPaper> getCells();
 }
