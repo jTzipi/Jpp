@@ -205,6 +205,12 @@ public class AvivPane extends Pane {
         return this.fxColorGridProp;
     }
 
+    /**
+     * Border Mask.
+     * <p>
+     * A mask for each border.
+     * </p>
+     */
     static final class BorderMask {
 
         public static final double FENCE_MAX = 100D;
@@ -213,7 +219,7 @@ public class AvivPane extends Pane {
         /**
          * is mask visible
          */
-        BooleanProperty fxEnabledProp = new SimpleBooleanProperty( this, "FX_MASK_ENABLED_PROP", false );
+        private BooleanProperty fxEnabledProp = new SimpleBooleanProperty( this, "FX_MASK_ENABLED_PROP", false );
         private DoubleProperty fxFenceHeightProp;
         private double fence;
         private int pike;

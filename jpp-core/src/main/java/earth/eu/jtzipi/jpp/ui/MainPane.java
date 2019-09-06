@@ -127,6 +127,8 @@ public final class MainPane extends Pane {
         toolBar.getItems().addAll( xTileLab, xDimSpin, yTileLab, yDimSpin );
 
         StatusBar statusBar = new StatusBar();
+        // DEBUG
+        mapP.setOnMouseMoved( me -> statusBar.setText( "xy[" + me.getX() + " " + me.getY() + "]" ) );
 
         mainPanePrefWidthBind = PenAndPaperPropertiesFX.WINDOW_WIDTH_PROP_FX.subtract( 100D );
         mainPanePrefHeightBind = PenAndPaperPropertiesFX.WINDOW_HEIGHT_PROP_FX.subtract( 100D );
