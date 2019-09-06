@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  * <p>
  *     Here we can find all application default properties.
  * </p>
+ * @author jTzipi
  */
 public final class PenAndPaperPropertiesFX {
 
