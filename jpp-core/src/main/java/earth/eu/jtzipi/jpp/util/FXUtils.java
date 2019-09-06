@@ -24,6 +24,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 /**
  * Utilities for JavaFX related.
  */
@@ -44,7 +46,25 @@ public final class FXUtils {
         return new Background( new BackgroundFill( color, new CornerRadii( radii ), insets ) );
     }
 
+    /**
+     * Clamp number to a range.
+     *
+     * @param <T> subtype of number
+     * @param val val
+     * @param min min
+     * @param max max
+     * @return clamped value
+     */
+    public static <T extends Number & Comparable<? super T>> T clamp( T val, T min, T max ) {
+        Objects.requireNonNull( val );
+        Objects.requireNonNull( min );
+        Objects.requireNonNull( max );
 
+        boolean below = 0 > val.compareTo( min );
+        boolean above = 0 < val.compareTo( max );
+
+        return below ? min : above ? max : val;
+    }
     /**
      * Test whether {@code node} has a preferred width {@literal > 0}.
      * @param node region

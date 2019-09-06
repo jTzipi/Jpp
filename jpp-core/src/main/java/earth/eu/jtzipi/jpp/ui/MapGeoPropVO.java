@@ -119,10 +119,9 @@ public final class MapGeoPropVO {
         this.fxDimXProp = new SimpleIntegerProperty( this, FX_PROP_TILE_X, ppMap.getDimX() );
         this.fxDimYProp = new SimpleIntegerProperty( this, FX_PROP_TILE_Y, ppMap.getDimY() );
         // width = rows * tile size + offset + left gap
-        this.fxWidthBinding = tw.multiply( fxDimXProp ).add( bindOffset ).add( gapWest );
+        this.fxWidthBinding = tw.multiply( fxDimXProp ).add( bindOffset ).add( gapWest ).add( gapWest );
         // height = rows * tile size + offset + top gap
         this.fxHeightBinding = tw.multiply( fxDimYProp ).add( bindOffset ).add( gapNorth );
-
 
         this.fxOffsetXBinding = bindOffset.add( gapWest );
         this.fxOffsetYBinding = bindOffset.add( gapNorth );

@@ -21,19 +21,15 @@ package earth.eu.jtzipi.jpp.ui;
 import earth.eu.jtzipi.jpp.cell.ICellPenAndPaper;
 import earth.eu.jtzipi.jpp.ui.tile.PenAndPaperPos;
 import earth.eu.jtzipi.jpp.ui.tile.segment.PathBuilder;
-import javafx.animation.FadeTransition;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import earth.eu.jtzipi.jpp.util.FXUtils;
+import javafx.beans.property.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Transform;
+import javafx.scene.transform.Affine;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 
 /**
  * Pane above Map pane to display info.
@@ -54,10 +50,12 @@ public class AvivPane extends Pane {
 
     private Shape hover;    // Shape to indicate hover position
     private Shape clicked;  // Shape to indicate clicked position
-    private EnumMap<PenAndPaperPos, Shape> overflowEMap; // Shape displaying a zigzag line to indicte overflow of scroll pane
 
 
-    private FadeTransition clickedFT;
+    private EnumMap<PenAndPaperPos, BorderMask> overflowEMap; // Shape displaying a zigzag line to indicate overflow of scroll pane
+
+
+
 
     /**
      * Avi
@@ -66,7 +64,7 @@ public class AvivPane extends Pane {
      */
     AvivPane( final MapGeoPropVO geoPropertyVO ) {
         this.geoPropVO = geoPropertyVO;
-
+        this.overflowEMap = new EnumMap<>( PenAndPaperPos.class );
 
         setMouseTransparent( true );
         init();
@@ -87,60 +85,13 @@ public class AvivPane extends Pane {
                 onClicked( cellOld, cellNew )
         );
 
-
+        overflowEMap.put( PenAndPaperPos.W, BorderMask.of( 50, 50, PenAndPaperPos.W ) );
+        overflowEMap.put( PenAndPaperPos.E, BorderMask.of( 50, 50, PenAndPaperPos.E ) );
+        overflowEMap.put( PenAndPaperPos.S, BorderMask.of( 50, 50, PenAndPaperPos.S ) );
+        overflowEMap.put( PenAndPaperPos.N, BorderMask.of( 50, 50, PenAndPaperPos.N ) );
     }
 
-    private static Shape createOverflow( PenAndPaperPos pp, int pike, double fenceHeight ) {
 
-        // create a new empty path starting [0,0]
-        PathBuilder pb = PathBuilder.create();
-
-        double fence = 25D; // fence distance
-        double step = 24D;  // step distance
-        //  fence height
-        pb.lx( fenceHeight );
-
-        // about 2400 pixel
-        for ( int i = 0; i < pike; i++ ) {
-
-            double x = i % 2 == 0 ? fenceHeight + fence : fenceHeight;
-            double ym = i * step;
-
-            pb.lxy( x, ym );
-        }
-        pb.lx( 0D );
-        pb.ly( 0D );
-        pb.close();
-        Shape raw = pb.build();
-        // transform for position
-        List<Transform> tL = new ArrayList<>();
-
-        switch ( pp ) {
-            // east we have to rotate and translate
-            case E:
-                //tL.add( Transform.rotate( 180D, 0D, 500D ) );
-                tL.add( Transform.translate( 280D, 100D ) );
-                raw.setFill( Color.RED );
-                break;
-            case S:
-
-                tL.add( Transform.translate( 180D, 500D ) );
-
-                break;
-            case N:
-                //tL.add( Transform.rotate( 90D, 0D, 0D ) );
-                break;
-            default:
-                ;
-        }
-        // if transformation
-        if ( !tL.isEmpty() ) {
-            raw.getTransforms().addAll( tL );
-        }
-
-
-        return raw;
-    }
 
     private void onClicked( ICellPenAndPaper cellOld, ICellPenAndPaper cellNew ) {
 
@@ -167,13 +118,15 @@ public class AvivPane extends Pane {
 
         // FX_TILE_WIDTH_PROP.
         DoubleProperty twProp = MapPropertiesFX.FX_TILE_WIDTH_PROP;
+        double gapWest = MapPropertiesFX.FX_GAP_EDGE_WEST_PROP.doubleValue();
+        double gapNorth = MapPropertiesFX.FX_GAP_EDGE_NORTH_PROP.doubleValue();
         // tile width
         double tw = twProp.doubleValue();
         // offset
         double offX = geoPropVO.fxOffsetXBinding().get();
         double offY = geoPropVO.fxOffsetYBinding().get();
-        double w = geoPropVO.fxWidthBinding().get();
-        double h = geoPropVO.fxHeightBinding().get();
+        double w = geoPropVO.fxWidthBinding().subtract( gapWest ).get();
+        double h = geoPropVO.fxHeightBinding().subtract( gapNorth ).get();
 
         // all column
         for ( int ix = 0; ix < geoPropVO.fxDimXProp().get(); ix++ ) {
@@ -238,9 +191,9 @@ public class AvivPane extends Pane {
 //
         getChildren().add( hover );
         getChildren().add( clicked );
-        getChildren().add( createOverflow( PenAndPaperPos.S, 50, 55D ) );
-        getChildren().add( createOverflow( PenAndPaperPos.N, 50, 55D ) );
-        getChildren().add( createOverflow( PenAndPaperPos.E, 50, 55D ) );
+        getChildren().add( overflowEMap.get( PenAndPaperPos.N ).getShape() );
+        getChildren().add( overflowEMap.get( PenAndPaperPos.E ).getShape() );
+        getChildren().add( overflowEMap.get( PenAndPaperPos.S ).getShape() );
     }
     /**
      * Return grid Color property.
@@ -250,5 +203,129 @@ public class AvivPane extends Pane {
     public final ObjectProperty<Color> getGridColorPropFX() {
 
         return this.fxColorGridProp;
+    }
+
+    static final class BorderMask {
+
+        public static final double FENCE_MAX = 100D;
+        public static final double FENCE_DEF = 51D;
+        public static final double FENCE_MIN = 7D;
+        /**
+         * is mask visible
+         */
+        BooleanProperty fxEnabledProp = new SimpleBooleanProperty( this, "FX_MASK_ENABLED_PROP", false );
+        private DoubleProperty fxFenceHeightProp;
+        private double fence;
+        private int pike;
+        private DoubleProperty fxOffsetXProp = new SimpleDoubleProperty( this, "", -1000D );
+        private DoubleProperty fxOffsetYProp = new SimpleDoubleProperty( this, "", -1000D );
+        private PenAndPaperPos pos;
+        // mask
+        private Shape mask;
+
+        private BorderMask( double fenceHeight, int pikes, PenAndPaperPos ppp ) {
+            this.fence = fenceHeight;
+            this.pike = pikes;
+            this.pos = ppp;
+            this.fxFenceHeightProp = new SimpleDoubleProperty( this, "FX_FENCE_HEIGHT_PROP", fenceHeight );
+        }
+
+        static BorderMask of( double fenceHeight, int pike, PenAndPaperPos pos ) {
+            fenceHeight = FXUtils.clamp( fenceHeight, FENCE_MIN, FENCE_MAX );
+            pike = FXUtils.clamp( pike, 1, 1000 );
+
+            BorderMask borderMask = new BorderMask( fenceHeight, pike, pos );
+            borderMask.init();
+
+            return borderMask;
+        }
+
+        /**
+         * Create mask with 'fence-shape' for clipping.
+         *
+         * @param pp          position
+         * @param pike        pikes
+         * @param fenceHeight height
+         * @return fence shape
+         */
+        private static Shape createOverflow( PenAndPaperPos pp, int pike, double fenceHeight ) {
+
+            // create a new empty path starting [0,0]
+            PathBuilder pb = PathBuilder.create();
+
+            double fence = 25D; // fence distance
+            double step = 24D;  // step distance
+
+            pb.lx( fenceHeight ); //  fence height
+            double length = pike * step;
+
+            // about 2400 pixel
+            for ( int i = 0; i < pike; i++ ) {
+
+                double x = i % 2 == 0 ? fenceHeight + fence : fenceHeight;
+                double ym = i * step;
+
+                pb.lxy( x, ym );
+            }
+            // finally
+            pb.lx( 0D ); // move back to start
+            pb.ly( 0D );
+            pb.close();
+
+
+            Shape raw = pb.build();
+            // transform for position
+
+            //System.err.println( "PW " + getPrefWidth() + " " + getPrefHeight() );
+            switch ( pp ) {
+
+                case W: // nothing todo
+                    break;
+                // east we need to scale and translate
+                case E:
+
+                    raw.setScaleX( -1D );
+                    raw.setTranslateX( 70D );
+                    raw.setFill( Color.color( 0.12D, 0.1D, 1D, 0.7D ) );
+                    break;
+                // south we need to rotate and scale
+                case S:
+
+                    raw.setRotate( 270D );
+                    raw.setTranslateX( 500D );
+                    raw.setStroke( Color.rgb( 11, 11, 248 ) );
+                    break;
+
+                case N:
+                    // north we need scale and rotate
+                    Affine affine = new Affine();
+                    affine.appendScale( -1D, 1D );          // second we mirror around y axis
+                    affine.appendRotation( 90D );             // first we rotate 90°
+                    //affine.appendRotation( 90D );
+
+
+                    raw.getTransforms().add( affine );
+                    raw.setFill( Color.DARKSEAGREEN );
+                    // raw.setStroke( Color.CORNSILK );
+                    break;
+                default:
+                    ;
+            }
+
+
+            return raw;
+        }
+
+        private void init() {
+            this.mask = createOverflow( pos, pike, fence );
+        }
+
+        private Shape getShape() {
+            return this.mask;
+        }
+
+        BooleanProperty getFxEnabledProp() {
+            return this.fxEnabledProp;
+        }
     }
 }

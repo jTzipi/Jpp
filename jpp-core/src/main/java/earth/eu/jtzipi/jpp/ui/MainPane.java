@@ -138,7 +138,6 @@ public final class MainPane extends Pane {
         sp.setPannable( true );
         sp.prefWidthProperty().bind( mainPanePrefWidthBind );
         sp.prefHeightProperty().bind( mainPanePrefHeightBind );
-        MapPropertiesFX.FX_MAP_PANE_VIEWPORT_BOUNDS_PROP.bind( sp.viewportBoundsProperty() );
 
 
         sp.hvalueProperty().addListener( ( obs, ivo, ivn ) -> System.out.println( "" + ( ivn.doubleValue() * ( mapP.getPrefWidth() - sp.getViewportBounds().getWidth() ) ) ) );

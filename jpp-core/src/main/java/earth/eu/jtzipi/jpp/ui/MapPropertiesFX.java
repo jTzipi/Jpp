@@ -23,7 +23,6 @@ import earth.eu.jtzipi.jpp.ui.tile.segment.ISegment;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
-import javafx.geometry.Bounds;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -94,7 +93,7 @@ public final class MapPropertiesFX {
      */
     public static NumberBinding FX_TILE_HOVER_OFF_Y_BIND;
 
-    public static final ObjectProperty<Bounds> FX_MAP_PANE_VIEWPORT_BOUNDS_PROP = new SimpleObjectProperty<>();
+
     /**
      * Clicked pen and paper cell.
      */
